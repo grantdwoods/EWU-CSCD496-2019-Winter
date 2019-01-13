@@ -20,7 +20,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection = new SqliteConnection("DataSource=:memory:");
             SqliteConnection.Open();
-
+            
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
                 .Options;
