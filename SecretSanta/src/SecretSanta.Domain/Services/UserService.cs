@@ -31,13 +31,5 @@ namespace SecretSanta.Domain.Services
             return DbContext.Users.Include(user => user.Gifts)
                 .SingleOrDefault(user => user.Id == id);
         }
-
-        public List<User> FetchAll()
-        {
-            var userTask = DbContext.Users.ToListAsync();
-            userTask.Wait();
-     
-            return userTask.Result;
-        }
     }
 }
