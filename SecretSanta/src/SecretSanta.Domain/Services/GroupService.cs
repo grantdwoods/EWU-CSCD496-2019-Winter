@@ -40,7 +40,9 @@ namespace SecretSanta.Domain.Services
                 .Include(g => g.UserGroups)
                 .SingleOrDefault(g => g.Id == groupId);
 
-            var userGroup = group.UserGroups.SingleOrDefault(ug => ug.UserId == userId);
+            var userGroup = group.UserGroups
+                .SingleOrDefault(ug => ug.UserId == userId);
+
             group.UserGroups.Remove(userGroup);
 
             Context.SaveChanges();

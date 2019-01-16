@@ -25,7 +25,8 @@ namespace SecretSanta.Domain.Services
 
         public Pairing Find(int id)
         {
-            return Context.Pairings.Include(pairing => pairing.Recipient)
+            return Context.Pairings
+                .Include(pairing => pairing.Recipient)
                 .Include(pairing => pairing.Santa)
                 .SingleOrDefault(pairing => pairing.Id == id);
         }

@@ -32,7 +32,8 @@ namespace SecretSanta.Domain.Services
 
         public Gift Find(int id)
         {
-            return Context.Gifts.Include(gift => gift.User)
+            return Context.Gifts
+                .Include(gift => gift.User)
                 .SingleOrDefault(gift => gift.Id == id);
         }
         public Gift RemoveGift(Gift gift)
@@ -45,7 +46,8 @@ namespace SecretSanta.Domain.Services
 
         public List<Gift> FetchAllUserGifts(int id)
         {
-            var user = Context.Users.Include(u => u.Gifts)
+            var user = Context.Users
+                .Include(u => u.Gifts)
                 .SingleOrDefault(u => u.Id == id);
 
             return user.Gifts.ToList();

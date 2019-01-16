@@ -25,7 +25,8 @@ namespace SecretSanta.Domain.Services
 
         public Message Find(int id)
         {
-            return Context.Messages.Include(message => message.ToUser)
+            return Context.Messages
+                .Include(message => message.ToUser)
                 .Include(message => message.FromUser)
                 .SingleOrDefault(message => message.Id == id);
         }
