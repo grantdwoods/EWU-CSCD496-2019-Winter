@@ -9,7 +9,7 @@ namespace SecretSanta.Domain.Services
 {
     public class UserService
     {
-        private ApplicationDbContext DbContext { get; }
+        private ApplicationDbContext DbContext { get; set; }
         public UserService(ApplicationDbContext context)
         {
             DbContext = context;

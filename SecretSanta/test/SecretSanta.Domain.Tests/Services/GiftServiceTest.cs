@@ -41,7 +41,7 @@ namespace SecretSanta.Domain.Tests.Services
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 context.Database.EnsureCreated();
             }
@@ -66,7 +66,7 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public void AddGift()
         {
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 GiftService giftService = new GiftService(context);
                 Gift gift = CreateGift();
@@ -80,21 +80,21 @@ namespace SecretSanta.Domain.Tests.Services
             GiftService giftService;
             Gift gift = CreateGift();
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 
                 giftService.AddGift(gift);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 
-                Gift userGift = giftService.Find(1);
+                Gift foundGift = giftService.Find(1);
 
-                Assert.AreEqual("A really cool thing!", userGift.Description);
-                Assert.AreEqual(5, userGift.Importance);
+                Assert.AreEqual("A really cool thing!", foundGift.Description);
+                Assert.AreEqual(5, foundGift.Importance);
             }
         }
 
@@ -104,14 +104,14 @@ namespace SecretSanta.Domain.Tests.Services
             GiftService giftService;
             Gift gift = CreateGift();
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 
                 giftService.AddGift(gift);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 
@@ -122,7 +122,7 @@ namespace SecretSanta.Domain.Tests.Services
                 giftService.UpdateGift(userGift);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
                 Gift userGift = giftService.Find(1);
@@ -137,14 +137,14 @@ namespace SecretSanta.Domain.Tests.Services
             GiftService giftService;
             Gift gift = CreateGift();
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 
                 giftService.AddGift(gift);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
 

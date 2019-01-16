@@ -25,7 +25,7 @@ namespace SecretSanta.Domain.Tests.Services
                 .UseSqlite(SqliteConnection)
                 .Options;
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 context.Database.EnsureCreated();
             }
@@ -46,14 +46,14 @@ namespace SecretSanta.Domain.Tests.Services
                 LastName = "Montoya"
             };
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 userService = new UserService(context);
 
                 userService.AddUser(user);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 userService = new UserService(context);
 
@@ -74,14 +74,14 @@ namespace SecretSanta.Domain.Tests.Services
                 LastName = "Montoya"
             };
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 userService = new UserService(context);
 
                 userService.UpdateUser(user);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 userService = new UserService(context);
 
@@ -92,7 +92,7 @@ namespace SecretSanta.Domain.Tests.Services
                 userService.UpdateUser(user);
             }
 
-            using (var context = new ApplicationDbContext(Options))
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 userService = new UserService(context);
 
