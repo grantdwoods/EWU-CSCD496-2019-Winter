@@ -153,6 +153,33 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.IsNull(giftService.Find(gift.Id));
             }
         }
+
+        [TestMethod]
+        public void FetchAllUserGifts()
+        {
+            GiftService giftService;
+            Gift firstGift = CreateGift();
+            Gift secondGift = CreateGift();
+            
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+
+                giftService.AddGift(firstGift);
+                giftService.AddGift(secondGift);
+            }
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+
+                List<Gift> userGifts = giftService.FetchAllUserGifts(1);
+                foreach(Gift g in userGifts)
+                {
+                    Assert.AreEqual("G", g.User.FirstName);
+                }
+            }
+        }
     }
 }
 

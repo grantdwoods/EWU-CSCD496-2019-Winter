@@ -42,5 +42,13 @@ namespace SecretSanta.Domain.Services
 
             return gift;
         }
+
+        public List<Gift> FetchAllUserGifts(int id)
+        {
+            var user = Context.Users.Include(u => u.Gifts)
+                .SingleOrDefault(u => u.Id == id);
+
+            return user.Gifts.ToList();
+        }
     }
 }
