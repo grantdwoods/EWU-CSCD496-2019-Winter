@@ -28,6 +28,10 @@ namespace SecretSanta.Domain.Services
             var group = Context.Groups
                 .Include(g => g.UserGroups)
                 .SingleOrDefault(g => g.Id == groupId);
+
+            group.UserGroups.Add(userGroup);
+
+            Context.SaveChanges();
         }
 
         public void RemoveUserFromGroup(int groupId, int userId)

@@ -29,7 +29,9 @@ namespace SecretSanta.Domain.Services
         public User Find(int id)
         {
             return DbContext.Users.Include(user => user.Gifts)
+                .Include(user => user.UserGroups)
                 .SingleOrDefault(user => user.Id == id);
         }
+
     }
 }
