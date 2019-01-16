@@ -14,16 +14,14 @@ namespace SecretSanta.Domain.Services
             DbContext = context;
         }
 
-        public void UpsertUser(User user)
+        public void AddUser(User user)
         {
-            if (user.Id == default(int))
-            {
-                DbContext.Users.Add(user);
-            }
-            else
-            {
-                DbContext.Users.Update(user);
-            }
+            DbContext.Users.Add(user);
+            DbContext.SaveChanges();
+        }
+        public void UpdateUser(User user)
+        {
+            DbContext.Users.Update(user);
             DbContext.SaveChanges();
         }
 

@@ -36,7 +36,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
         [TestMethod]
-        public void CreateUser()
+        public void AddUser()
         {
             UserService userService;
 
@@ -50,7 +50,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 userService = new UserService(context);
 
-                userService.UpsertUser(user);
+                userService.AddUser(user);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -78,7 +78,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 userService = new UserService(context);
 
-                userService.UpsertUser(user);
+                userService.UpdateUser(user);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -89,7 +89,7 @@ namespace SecretSanta.Domain.Tests.Services
                 user.FirstName = "Princess";
                 user.LastName = "Buttercup";
 
-                userService.UpsertUser(user);
+                userService.UpdateUser(user);
             }
 
             using (var context = new ApplicationDbContext(Options))

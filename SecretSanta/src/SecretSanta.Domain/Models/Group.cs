@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SecretSanta.Domain.Models
+﻿namespace SecretSanta.Domain.Models
 {
-    public class Group: Entity
+    public class Group : Entity
     {
         public string Title { get; set; }
-        //public ICollection<UserGroup> UserGroup { get; set; }
     }
 }

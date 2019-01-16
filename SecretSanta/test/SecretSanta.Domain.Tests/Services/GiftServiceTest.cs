@@ -71,7 +71,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 GiftService giftService = new GiftService(context);
                 Gift gift = CreateGift();
-                Gift userGift = giftService.UpsertGift(gift);
+                Gift userGift = giftService.AddGift(gift);
                 Assert.AreNotEqual(0,userGift.Id);
             }
         }
@@ -84,7 +84,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-                giftService.UpsertGift(gift);
+                giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -106,7 +106,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-                giftService.UpsertGift(gift);
+                giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -115,7 +115,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Gift userGift = giftService.Find(1);
                 userGift.Description = "This isnt very cool anymore...";
                 userGift.Importance = 1;
-                giftService.UpsertGift(userGift);
+                giftService.UpdateGift(userGift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -136,7 +136,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
-                giftService.UpsertGift(gift);
+                giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))

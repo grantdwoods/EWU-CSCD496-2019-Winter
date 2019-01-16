@@ -13,16 +13,15 @@ namespace SecretSanta.Domain.Services
             this.Context = context;
         }
 
-        public Gift UpsertGift(Gift gift)
+        public Gift AddGift(Gift gift)
         {
-            if(gift.Id == default(int))
-            {
-                Context.Gifts.Add(gift);
-            }
-            else
-            {
-                Context.Gifts.Update(gift);
-            }
+            Context.Gifts.Add(gift);
+            Context.SaveChanges();
+            return gift;
+        }
+        public Gift UpdateGift(Gift gift)
+        {
+            Context.Gifts.Update(gift);
             Context.SaveChanges();
             return gift;
         }
