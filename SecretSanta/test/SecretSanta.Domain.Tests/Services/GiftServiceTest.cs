@@ -177,6 +177,7 @@ namespace SecretSanta.Domain.Tests.Services
                 foreach(Gift g in userGifts)
                 {
                     Assert.AreEqual("G", g.User.FirstName);
+                    Assert.AreEqual("A really cool thing!", g.Description);
                 }
             }
         }
