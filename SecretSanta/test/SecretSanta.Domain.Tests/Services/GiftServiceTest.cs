@@ -159,8 +159,16 @@ namespace SecretSanta.Domain.Tests.Services
         {
             GiftService giftService;
             Gift firstGift = CreateGift();
-            Gift secondGift = CreateGift();
-            
+            User user = new User { FirstName = "G", LastName = "W", Id = 1};
+
+            Gift secondGift = new Gift
+            {
+                User = user,
+                Importance = 5,
+                Description = "A really cool thing!",
+                Url = "shophere.com"
+            };
+
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
@@ -177,8 +185,8 @@ namespace SecretSanta.Domain.Tests.Services
                 foreach(Gift g in userGifts)
                 {
                     Assert.AreEqual("G", g.User.FirstName);
-                    Assert.AreEqual("A really cool thing!", g.Description);
                 }
+                Assert.AreEqual(2, userGifts.Count);
             }
         }
     }
