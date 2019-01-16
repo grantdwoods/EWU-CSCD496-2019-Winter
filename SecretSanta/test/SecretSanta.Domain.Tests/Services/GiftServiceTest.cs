@@ -52,6 +52,100 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
+        private Gift CreateGift()
+        {
+            User user = new User { FirstName = "G", LastName = "W" };
+            Gift gift = new Gift
+            {
+                User = user,
+                Importance = 5,
+                Description = "A really cool thing!",
+                Url = "shophere.com"
+            };
+            return gift;
+        }
+        [TestMethod]
+        public void AddGift()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                GiftService giftService = new GiftService(context);
+                Gift gift = CreateGift();
+                Gift userGift = giftService.UpsertGift(gift);
+                Assert.AreNotEqual(0,userGift.Id);
+            }
+        }
+        [TestMethod]
+        public void FindGift()
+        {
+            GiftService giftService;
+            Gift gift = CreateGift();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                giftService.UpsertGift(gift);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                Gift userGift = giftService.Find(1);
+
+                Assert.AreEqual("A really cool thing!", userGift.Description);
+                Assert.AreEqual(5, userGift.Importance);
+            }
+        }
+
+        [TestMethod]
+        public void UpdateGift()
+        {
+            GiftService giftService;
+            Gift gift = CreateGift();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                giftService.UpsertGift(gift);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                Gift userGift = giftService.Find(1);
+                userGift.Description = "This isnt very cool anymore...";
+                userGift.Importance = 1;
+                giftService.UpsertGift(userGift);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                Gift userGift = giftService.Find(1);
+
+                Assert.AreEqual("This isnt very cool anymore...", userGift.Description);
+                Assert.AreEqual(1, userGift.Importance);
+            }
+        }
+        [TestMethod]
+        public void RemoveGift()
+        {
+            GiftService giftService;
+            Gift gift = CreateGift();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                giftService.UpsertGift(gift);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                giftService = new GiftService(context);
+                giftService.RemoveGift(gift);
+                Assert.IsNull(giftService.Find(gift.Id));
+            }
+        }
     }
 }
 

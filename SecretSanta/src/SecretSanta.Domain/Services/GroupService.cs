@@ -28,9 +28,9 @@ namespace SecretSanta.Domain.Services
 
         }
 
-        public Group Find(int id)
-        {
-            return DbContext.Groups.Find(id);
-        }
+        //public Group Find(int id)
+        //{
+        //    return DbContext.Groups.Find(id);
+        //}
     }
 }
