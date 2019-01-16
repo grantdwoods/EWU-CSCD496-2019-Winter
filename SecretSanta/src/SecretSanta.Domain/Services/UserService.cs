@@ -2,6 +2,7 @@
 using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SecretSanta.Domain.Services
@@ -27,14 +28,15 @@ namespace SecretSanta.Domain.Services
 
         public User Find(int id)
         {
-            return DbContext.Users.Find(id);
+            return DbContext.Users.Include(user => user.Gifts)
+                .SingleOrDefault(user => user.Id == id);
         }
 
         public List<User> FetchAll()
         {
             var userTask = DbContext.Users.ToListAsync();
             userTask.Wait();
-
+     
             return userTask.Result;
         }
     }

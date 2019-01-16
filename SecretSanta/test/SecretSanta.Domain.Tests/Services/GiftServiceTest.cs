@@ -29,7 +29,6 @@ namespace SecretSanta.Domain.Tests.Services
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
 
-
         [TestInitialize]
         public void OpenConnection()
         {
@@ -84,12 +83,14 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 Gift userGift = giftService.Find(1);
 
                 Assert.AreEqual("A really cool thing!", userGift.Description);
@@ -106,13 +107,16 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 Gift userGift = giftService.Find(1);
+
                 userGift.Description = "This isnt very cool anymore...";
                 userGift.Importance = 1;
                 giftService.UpdateGift(userGift);
@@ -136,13 +140,16 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 giftService.AddGift(gift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
                 giftService = new GiftService(context);
+
                 giftService.RemoveGift(gift);
+
                 Assert.IsNull(giftService.Find(gift.Id));
             }
         }
