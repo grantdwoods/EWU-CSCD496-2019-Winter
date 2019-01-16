@@ -20,7 +20,18 @@ namespace SecretSanta.Domain.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.Entity<UserGroup>()
+                .HasKey(userGroup => new { userGroup.UserId, userGroup.GroupId });
+
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(userGroup => userGroup.User)
+                .WithMany(user => user.UserGroups)
+                .HasForeignKey(userGroup => userGroup.UserId);
+
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(userGroup => userGroup.Group)
+                .WithMany(group => group.UserGroups)
+                .HasForeignKey(userGroup => userGroup.GroupId);
         }
     }
 }
