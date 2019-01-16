@@ -13,10 +13,10 @@ namespace SecretSanta.Domain.Services
             DbContext = context;
         }
 
-        //public void AddUser(int id, User user)
-        //{
-        //    Find(id).Users.Add(user);
-        //}
+        public void AddUser(int id, User user)
+        {
+           
+        }
 
         public void AddGroup(Group group)
         {
