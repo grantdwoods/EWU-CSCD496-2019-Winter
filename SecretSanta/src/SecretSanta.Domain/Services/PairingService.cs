@@ -28,6 +28,7 @@ namespace SecretSanta.Domain.Services
             return Context.Pairings
                 .Include(pairing => pairing.Recipient)
                 .Include(pairing => pairing.Santa)
+                .Include(pairing => pairing.Group)
                 .SingleOrDefault(pairing => pairing.Id == id);
         }
     }

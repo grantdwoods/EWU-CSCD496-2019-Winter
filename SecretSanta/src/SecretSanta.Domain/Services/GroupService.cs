@@ -25,9 +25,6 @@ namespace SecretSanta.Domain.Services
 
         public List<User> FetchUsersInGroup(Group group)
         {
-            var users = Context.Users
-                .Include(user => user.UserGroups)
-                .SingleOrDefault(user => user);
             return null;
         }
 

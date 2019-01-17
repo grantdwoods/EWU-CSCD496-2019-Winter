@@ -54,8 +54,44 @@ namespace SecretSanta.Domain.Tests.Services
 
         private Pairing CreatePairing()
         {
+            Group group = new Group {Title = "Grant's Team", Id = 1};
+            User santa = new User { FirstName = "Grant", LastName = "Santa", Id = 1 };
+            User recipient = new User { FirstName = "Gug", LastName = "Recipient", Id = 2 };
+            Pairing pairing = new Pairing { Group = group, Santa = santa, Recipient = recipient };
+            return pairing;
+        }
+        [TestMethod]
+        public void AddPairing()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                PairingService pairingService = new PairingService(context);
 
-            return null;
+                Pairing pairing = CreatePairing();
+                Pairing addedPairing = pairingService.AddPairing(pairing);
+
+                Assert.AreNotEqual(0, addedPairing.Id);
+            }
+        }
+        [TestMethod]
+        public void FindPairing()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                PairingService pairingService = new PairingService(context);
+
+                Pairing pairing = CreatePairing();
+                pairingService.AddPairing(pairing);
+            }
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                PairingService pairingService = new PairingService(context);
+
+                Pairing pairing = pairingService.Find(1);
+
+                Assert.AreEqual("Santa", pairing.Santa.LastName);
+            }
         }
     }
 }
