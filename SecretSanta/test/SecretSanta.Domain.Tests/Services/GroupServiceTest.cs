@@ -52,6 +52,79 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
+        [TestMethod]
+        public void AddGroup()
+        {
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                GroupService groupService = new GroupService(context);
 
+                Group group = new Group { Title = "Grant's Team" };
+                Group addedGroup = groupService.AddGroup(group);
+
+                Assert.AreNotEqual(0, addedGroup.Id);
+            }
+        }
+
+        [TestMethod]
+        public void FindGroup()
+        {
+            GroupService groupService;
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+
+                Group group = new Group { Title = "Grant's Team" };
+                Group addedGroup = groupService.AddGroup(group);
+            }
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                Group addedGroup = groupService.Find(1);
+
+                Assert.AreEqual("Grant's Team", addedGroup.Title);
+            }
+        }
+        [TestMethod]
+        public void AddUserToGroup()
+        {
+            GroupService groupService;
+            UserService userService;
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                userService = new UserService(context);
+                User user = new User { FirstName = "Grant", LastName = "Woods" };
+                userService.AddUser(user);
+
+                Group group = new Group { Title = "Grant's Team" };
+                groupService.AddGroup(group);
+            }
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                groupService = new GroupService(context);
+                userService = new UserService(context);
+
+                Group group = groupService.Find(1);
+                User user = userService.Find(1);
+
+                UserGroup userGroup = new UserGroup { User = user, UserId = user.Id,
+                    Group = group, GroupId = group.Id };
+
+                groupService.AddUserToGroup(userGroup);
+            }
+
+            using (ApplicationDbContext context = new ApplicationDbContext(Options))
+            {
+                UserGroup userGroup = new UserGroup
+                {
+
+                };
+            }
+        }
     }
 }

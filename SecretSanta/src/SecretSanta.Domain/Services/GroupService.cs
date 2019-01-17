@@ -23,13 +23,26 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public void AddUserToGroup(int groupId, UserGroup userGroup)
+        public List<User> FetchUsersInGroup(Group group)
+        {
+            var users = Context.Users
+                .Include(user => user.UserGroups)
+                .SingleOrDefault(user => user);
+            return null;
+        }
+
+        public Group Find(int id)
+        {
+            return Context.Groups.Find(id);
+        }
+        public void AddUserToGroup(UserGroup userGroup)
         {
             var group = Context.Groups
                 .Include(g => g.UserGroups)
-                .SingleOrDefault(g => g.Id == groupId);
+                .SingleOrDefault(g => g.Id == userGroup.GroupId);
 
             group.UserGroups.Add(userGroup);
+            Context.Users.Find(userGroup.UserId).UserGroups.Add(userGroup);
 
             Context.SaveChanges();
         }
