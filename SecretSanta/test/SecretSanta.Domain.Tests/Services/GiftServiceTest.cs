@@ -51,15 +51,17 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-        private Gift CreateGift()
+        private Gift CreateGift(User user = null, int importance = 5, 
+            string description = "A really cool thing!", string url = "shophere.com")
         {
-            User user = new User { FirstName = "G", LastName = "W" };
+            if(user == null)
+                user = new User { FirstName = "G", LastName = "W" };
             Gift gift = new Gift
             {
                 User = user,
-                Importance = 5,
-                Description = "A really cool thing!",
-                Url = "shophere.com"
+                Importance = importance,
+                Description = description,
+                Url = url
             };
             return gift;
         }
@@ -161,13 +163,7 @@ namespace SecretSanta.Domain.Tests.Services
             Gift firstGift = CreateGift();
             User user = new User { FirstName = "G", LastName = "W", Id = 1};
 
-            Gift secondGift = new Gift
-            {
-                User = user,
-                Importance = 5,
-                Description = "A really cool thing!",
-                Url = "shophere.com"
-            };
+            Gift secondGift = CreateGift(user);
 
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {

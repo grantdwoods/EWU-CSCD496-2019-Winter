@@ -35,16 +35,17 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
+
+        private User createUser(string firstName = "G", string lastName = "W", int id = default(int))
+        {
+            return new User { FirstName = firstName, LastName = lastName, Id = id};
+        }
         [TestMethod]
         public void AddUser()
         {
             UserService userService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
+            User user = createUser();
 
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
@@ -59,7 +60,7 @@ namespace SecretSanta.Domain.Tests.Services
 
                 user = userService.Find(1);
 
-                Assert.AreEqual("Inigo", user.FirstName);
+                Assert.AreEqual("G", user.FirstName);
             }
         }
 
@@ -68,11 +69,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             UserService userService;
 
-            User user = new User
-            {
-                FirstName = "Inigo",
-                LastName = "Montoya"
-            };
+            User user = createUser();
 
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
@@ -86,8 +83,8 @@ namespace SecretSanta.Domain.Tests.Services
                 userService = new UserService(context);
 
                 user = userService.Find(1);
-                user.FirstName = "Princess";
-                user.LastName = "Buttercup";
+                user.FirstName = "Grant";
+                user.LastName = "Woods";
 
                 userService.UpdateUser(user);
             }
@@ -98,7 +95,7 @@ namespace SecretSanta.Domain.Tests.Services
 
                 user = userService.Find(1);
 
-                Assert.AreEqual("Princess", user.FirstName);
+                Assert.AreEqual("Grant", user.FirstName);
             }
         }
     }
