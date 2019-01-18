@@ -99,7 +99,6 @@ namespace SecretSanta.Domain.Tests.Services
                 userService = new UserService(context);
                 User user = new User { FirstName = "Grant", LastName = "Woods" };
                 userService.AddUser(user);
-
                 Group group = new Group { Title = "Grant's Team" };
                 groupService.AddGroup(group);
             }
@@ -116,14 +115,6 @@ namespace SecretSanta.Domain.Tests.Services
                     Group = group, GroupId = group.Id };
 
                 groupService.AddUserToGroup(userGroup);
-            }
-
-            using (ApplicationDbContext context = new ApplicationDbContext(Options))
-            {
-                UserGroup userGroup = new UserGroup
-                {
-
-                };
             }
         }
     }

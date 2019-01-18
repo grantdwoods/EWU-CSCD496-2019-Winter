@@ -23,7 +23,7 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public List<User> FetchUsersInGroup(Group group)
+        public List<User> FetchUsersInGroup(int groupId)
         {
             return null;
         }

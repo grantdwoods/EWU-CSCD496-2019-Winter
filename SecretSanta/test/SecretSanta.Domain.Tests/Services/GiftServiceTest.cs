@@ -52,7 +52,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
         private Gift CreateGift(User user = null, int importance = 5, 
-            string description = "A really cool thing!", string url = "shophere.com")
+            string description = "A really cool thing!  ", string url = "shophere.com")
         {
             if(user == null)
                 user = new User { FirstName = "G", LastName = "W" };
