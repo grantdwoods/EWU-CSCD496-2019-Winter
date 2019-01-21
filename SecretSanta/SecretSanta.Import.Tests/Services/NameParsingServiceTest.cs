@@ -13,111 +13,109 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        public void ValidateHeader_ValidFirstLastFormat_ReturnTrue()
+        public void ParseHeader_ValidFirstLastFormat_ReturnFirstLast()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name: Grant Woods");
+            string[] names = giftImportService.ParseHeader("Name: Grant Woods");
 
-            Assert.AreEqual<bool>(true, isValid);
+            Assert.AreEqual<string>("Grant", names[0]);
+            Assert.AreEqual<string>("Woods", names[1]);
         }
 
         [TestMethod]
-        public void ValidateHeader_ValidLastFirstFormat_ReturnTrue()
+        public void ParseHeader_ValidLastFirstFormat_ReturnFirstLast()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name: Woods, Grant");
+            string[] names = giftImportService.ParseHeader("Name: Woods, Grant");
 
-            Assert.AreEqual<bool>(true, isValid);
+            Assert.AreEqual<string>("Grant", names[0]);
+            Assert.AreEqual<string>("Woods", names[1]);
         }
 
         [TestMethod]
-        public void ValidateHeader_InValidLastFirstMissingName_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_InValidLastFirstMissingName_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Woods, Grant");
-
-            Assert.AreEqual<bool>(false, isValid);
+            string[] names = giftImportService.ParseHeader("Woods, Grant");
         }
 
         [TestMethod]
-        public void ValidateHeader_InValidLastFirstMistypedLabel_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_InValidLastFirstMistypedLabel_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Nam: Woods, Grant");
-
-            Assert.AreEqual<bool>(false, isValid);
-        }
-        [TestMethod]
-        public void ValidateHeader_InValidLastFirstOnlyColonLabel_ReturnFalse()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            bool isValid = giftImportService.ParseHeader(": Woods, Grant");
-
-            Assert.AreEqual<bool>(false, isValid);
+            string[] names = giftImportService.ParseHeader("Nam: Woods, Grant");
         }
 
         [TestMethod]
-        public void ValidateHeader_InvalidMissingFirstLast_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_InValidLastFirstOnlyColonLabel_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name:");
-
-            Assert.AreEqual<bool>(false, isValid);
+            string[] names = giftImportService.ParseHeader(": Woods, Grant");
         }
 
         [TestMethod]
-        public void ValidateHeader_InvalidMissingFirstLastTrailingSpace_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_InvalidMissingFirstLast_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name:          ");
+            string[] names = giftImportService.ParseHeader("Name:");
 
-            Assert.AreEqual<bool>(false, isValid);
         }
 
         [TestMethod]
-        public void ValidateHeader_MissingLast_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_InvalidMissingFirstLastTrailingSpace_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name: Grant");
+            string[] names = giftImportService.ParseHeader("Name:          ");
 
-            Assert.AreEqual<bool>(false, isValid);
         }
 
         [TestMethod]
-        public void ValidateHeader_MissingFirst_ReturnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_MissingLast_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("Name: Woods,");
+            string[] names = giftImportService.ParseHeader("Name: Grant");
 
-            Assert.AreEqual<bool>(false, isValid);
         }
 
         [TestMethod]
-        public void ValidateHeader_EmptyString_RetrurnFalse()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_MissingFirst_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader("");
-
-            Assert.AreEqual<bool>(false, isValid);
+            string[] names = giftImportService.ParseHeader("Name: Woods,");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ValidateHeader_NullString_ThrowsNullArgument()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_EmptyString_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ParseHeader(null);
+            string[] names = giftImportService.ParseHeader("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ParseHeader_NullString_ThrowsArgumentException()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            string[] names = giftImportService.ParseHeader(null);
         }
     }
 }
