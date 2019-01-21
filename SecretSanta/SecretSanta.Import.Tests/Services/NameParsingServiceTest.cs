@@ -17,7 +17,7 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("Name: Grant Woods");
+            bool isValid = giftImportService.ParseHeader("Name: Grant Woods");
 
             Assert.AreEqual<bool>(true, isValid);
         }
@@ -27,17 +27,36 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("Name: Woods, Grant");
+            bool isValid = giftImportService.ParseHeader("Name: Woods, Grant");
 
             Assert.AreEqual<bool>(true, isValid);
         }
 
         [TestMethod]
-        public void ValidateHeader_InValidLastFirstFormat_ReturnFalse()
+        public void ValidateHeader_InValidLastFirstMissingName_ReturnFalse()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("Woods, Grant");
+            bool isValid = giftImportService.ParseHeader("Woods, Grant");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+
+        [TestMethod]
+        public void ValidateHeader_InValidLastFirstMistypedLabel_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ParseHeader("Nam: Woods, Grant");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+        [TestMethod]
+        public void ValidateHeader_InValidLastFirstOnlyColonLabel_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ParseHeader(": Woods, Grant");
 
             Assert.AreEqual<bool>(false, isValid);
         }
@@ -47,27 +66,7 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("Name:");
-
-            Assert.AreEqual<bool>(false, isValid);
-        }
-
-        [TestMethod]
-        public void ValidateHeader_MissingLast_ReturnFalse()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            bool isValid = giftImportService.ValidateHeader("Name: Grant");
-
-            Assert.AreEqual<bool>(false, isValid);
-        }
-
-        [TestMethod]
-        public void ValidateHeader_MissingFirst_ReturnFalse()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            bool isValid = giftImportService.ValidateHeader("Name: Woods,");
+            bool isValid = giftImportService.ParseHeader("Name:");
 
             Assert.AreEqual<bool>(false, isValid);
         }
@@ -77,7 +76,27 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("Name:          ");
+            bool isValid = giftImportService.ParseHeader("Name:          ");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+
+        [TestMethod]
+        public void ValidateHeader_MissingLast_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ParseHeader("Name: Grant");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+
+        [TestMethod]
+        public void ValidateHeader_MissingFirst_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ParseHeader("Name: Woods,");
 
             Assert.AreEqual<bool>(false, isValid);
         }
@@ -87,7 +106,7 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader("");
+            bool isValid = giftImportService.ParseHeader("");
 
             Assert.AreEqual<bool>(false, isValid);
         }
@@ -98,9 +117,7 @@ namespace SecretSanta.Import.Tests
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            bool isValid = giftImportService.ValidateHeader(null);
+            bool isValid = giftImportService.ParseHeader(null);
         }
-
-
     }
 }

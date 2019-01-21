@@ -6,7 +6,7 @@ namespace SecretSanta.Import.Services
 {
     public class NameParsingService
     {
-        public bool ValidateHeader(string header)
+        public bool ParseHeader(string header)
         {
             if(header == null)
             {
@@ -54,12 +54,20 @@ namespace SecretSanta.Import.Services
             if (fullName.Contains(','))
             {
                 names = fullName.Split(',');
+                SwapToFirstLastFormat(names);
             }
             else
             {
                 names = fullName.Split(" ");
             }
             return names;
+        }
+
+        private void SwapToFirstLastFormat(string[] names)
+        {
+            string temp = names[0];
+            names[0] = names[1];
+            names[1] = temp;
         }
     }
 }
