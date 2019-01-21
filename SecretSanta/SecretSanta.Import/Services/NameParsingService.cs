@@ -8,16 +8,7 @@ namespace SecretSanta.Import.Services
     {
         public string[] ParseHeader(string header)
         {
-            if(header == null)
-            {
-                throw new ArgumentNullException(nameof(header));
-            }
-
-            if(!header.StartsWith("Name: "))
-            {
-                throw new ArgumentException(nameof(header), 
-                    "Header must start with \"Name: /"");
-            }
+            ValidateHeaderStart(header);
         
             string fullName = ParseFullName(header);
             string[] names = separateFirstAndLast(fullName);
@@ -29,6 +20,20 @@ namespace SecretSanta.Import.Services
             }
 
             return names;
+        }
+
+        private void ValidateHeaderStart(string header)
+        {
+            if (header == null)
+            {
+                throw new ArgumentNullException(nameof(header));
+            }
+
+            if (!header.StartsWith("Name: "))
+            {
+                throw new ArgumentException(nameof(header),
+                    "Header must start with \"Name: \"");
+            }
         }
         private bool CheckNamesArray(string[] names)
         {

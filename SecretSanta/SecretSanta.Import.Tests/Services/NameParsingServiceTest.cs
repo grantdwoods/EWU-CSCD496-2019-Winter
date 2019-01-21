@@ -62,42 +62,17 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ParseHeader_InvalidMissingFirstLast_ThrowsArgumentException()
+        [DataRow("Name:")]
+        [DataRow("Name:           ")]
+        [DataRow("Name: Grant")]
+        [DataRow("Name: Woods,")]
+        [DataRow("Name:  , Grant")]
+        [ExpectedException(typeof(ArgumentException), "first or last name missing.")]
+        public void ParseHeader_InvalidMissingFirstLast_ThrowsArgumentException(string header)
         {
             NameParsingService giftImportService = CreateDefaultImporter();
 
-            string[] names = giftImportService.ParseHeader("Name:");
-
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ParseHeader_InvalidMissingFirstLastTrailingSpace_ThrowsArgumentException()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            string[] names = giftImportService.ParseHeader("Name:          ");
-
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ParseHeader_MissingLast_ThrowsArgumentException()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            string[] names = giftImportService.ParseHeader("Name: Grant");
-
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ParseHeader_MissingFirst_ThrowsArgumentException()
-        {
-            NameParsingService giftImportService = CreateDefaultImporter();
-
-            string[] names = giftImportService.ParseHeader("Name: Woods,");
+            string[] names = giftImportService.ParseHeader(header);
         }
 
         [TestMethod]
@@ -110,7 +85,7 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void ParseHeader_NullString_ThrowsArgumentException()
         {
             NameParsingService giftImportService = CreateDefaultImporter();
