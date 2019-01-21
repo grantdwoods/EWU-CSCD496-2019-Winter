@@ -5,17 +5,17 @@ using System;
 namespace SecretSanta.Import.Tests
 {
     [TestClass]
-    public class GiftImportServiceTest
+    public class NameParsingServiceTest
     {
-        public GiftImportService CreateDefaultImporter()
+        public NameParsingService CreateDefaultImporter()
         {
-            return new GiftImportService();
+            return new NameParsingService();
         }
 
         [TestMethod]
         public void ValidateHeader_ValidFirstLastFormat_ReturnTrue()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("Name: Grant Woods");
 
@@ -25,7 +25,7 @@ namespace SecretSanta.Import.Tests
         [TestMethod]
         public void ValidateHeader_ValidLastFirstFormat_ReturnTrue()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("Name: Woods, Grant");
 
@@ -35,7 +35,7 @@ namespace SecretSanta.Import.Tests
         [TestMethod]
         public void ValidateHeader_InValidLastFirstFormat_ReturnFalse()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("Woods, Grant");
 
@@ -45,7 +45,7 @@ namespace SecretSanta.Import.Tests
         [TestMethod]
         public void ValidateHeader_InvalidMissingFirstLast_ReturnFalse()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("Name:");
 
@@ -53,9 +53,29 @@ namespace SecretSanta.Import.Tests
         }
 
         [TestMethod]
+        public void ValidateHeader_MissingLast_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ValidateHeader("Name: Grant");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+
+        [TestMethod]
+        public void ValidateHeader_MissingFirst_ReturnFalse()
+        {
+            NameParsingService giftImportService = CreateDefaultImporter();
+
+            bool isValid = giftImportService.ValidateHeader("Name: Woods,");
+
+            Assert.AreEqual<bool>(false, isValid);
+        }
+
+        [TestMethod]
         public void ValidateHeader_InvalidMissingFirstLastTrailingSpace_ReturnFalse()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("Name:          ");
 
@@ -65,7 +85,7 @@ namespace SecretSanta.Import.Tests
         [TestMethod]
         public void ValidateHeader_EmptyString_RetrurnFalse()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader("");
 
@@ -76,9 +96,11 @@ namespace SecretSanta.Import.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void ValidateHeader_NullString_ThrowsNullArgument()
         {
-            GiftImportService giftImportService = CreateDefaultImporter();
+            NameParsingService giftImportService = CreateDefaultImporter();
 
             bool isValid = giftImportService.ValidateHeader(null);
         }
+
+
     }
 }
