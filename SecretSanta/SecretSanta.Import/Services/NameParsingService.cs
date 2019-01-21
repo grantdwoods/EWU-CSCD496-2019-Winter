@@ -8,9 +8,15 @@ namespace SecretSanta.Import.Services
     {
         public string[] ParseHeader(string header)
         {
-            if(header == null || !header.StartsWith("Name:"))
+            if(header == null)
             {
-                throw new ArgumentException(nameof(header));
+                throw new ArgumentNullException(nameof(header));
+            }
+
+            if(!header.StartsWith("Name: "))
+            {
+                throw new ArgumentException(nameof(header), 
+                    "Header must start with \"Name: /"");
             }
         
             string fullName = ParseFullName(header);
@@ -18,7 +24,8 @@ namespace SecretSanta.Import.Services
 
             if (!CheckNamesArray(names))
             {
-                throw new ArgumentException(nameof(header));
+                throw new ArgumentException(nameof(header), 
+                    "first or last name missing.");
             }
 
             return names;
