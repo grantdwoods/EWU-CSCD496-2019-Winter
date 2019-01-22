@@ -33,6 +33,5 @@ namespace SecretSanta.Domain.Services
                 .Include(user => user.UserGroups)
                 .SingleOrDefault(user => user.Id == id);
         }
-
     }
 }

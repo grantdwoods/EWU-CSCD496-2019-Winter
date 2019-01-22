@@ -36,7 +36,7 @@ namespace SecretSanta.Domain.Tests.Services
             SqliteConnection.Close();
         }
 
-        private User createUser(string firstName = "G", string lastName = "W", int id = default(int))
+        private User CreateUser(string firstName = "G", string lastName = "W", int id = default(int))
         {
             return new User { FirstName = firstName, LastName = lastName, Id = id};
         }
@@ -45,7 +45,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             UserService userService;
 
-            User user = createUser();
+            User user = CreateUser();
 
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {
@@ -69,7 +69,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             UserService userService;
 
-            User user = createUser();
+            User user = CreateUser();
 
             using (ApplicationDbContext context = new ApplicationDbContext(Options))
             {

@@ -10,17 +10,19 @@ namespace SecretSanta.Import.Tests
     public class GiftImportServiceTest
     {
         string dirPath;
+        string tmpFilePath;
 
         [TestInitialize]
         public void SetUpDirectory()
         {
             string tempDirPath = Path.GetTempPath();
-            dirPath = Path.Combine(tempDirPath + "/SecretSantaGiftImport");
+            dirPath = Path.Combine(tempDirPath + "SecretSantaGiftImport");
 
             if (Directory.Exists(dirPath))
                 CleanUpDirectory();
 
             Directory.CreateDirectory(dirPath);
+            tmpFilePath = Path.Combine(dirPath, "userGifts.tmp");
         }
         [TestCleanup]
         public void CleanUpDirectory()
@@ -33,28 +35,22 @@ namespace SecretSanta.Import.Tests
             Directory.Delete(dirPath);
         }
         [TestMethod]
-        public void Test()
+        public void ImportGifts_Valid_Format()
         {
             GiftImportService giftImportService = new GiftImportService();
 
-            string tmpFile = dirPath + "/userGifts.tmp";
             string[] wishList = 
             {
                 "Name: Grant Woods",
-                "",
                 "Gift1",
                 "Gift2",
                 "Gift3"
             };
+            File.WriteAllLines(tmpFilePath, wishList);
 
-            File.WriteAllLines(tmpFile, wishList);
+            //giftImportService.ImportGifts(tmpFilePath);
 
-            foreach(string line in File.ReadAllLines(tmpFile))
-            {
-                string testing = line;
-            }
-            //Directory.Delete(path);
-            File.Delete(tmpFile);
+            File.Delete(tmpFilePath);
         }
 
 

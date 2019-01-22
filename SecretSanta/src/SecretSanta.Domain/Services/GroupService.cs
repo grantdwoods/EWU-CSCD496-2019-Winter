@@ -9,7 +9,7 @@ namespace SecretSanta.Domain.Services
 {
     public class GroupService
     {
-        private ApplicationDbContext Context { get; set; }
+        private ApplicationDbContext Context { get; }
         public GroupService(ApplicationDbContext context)
         {
             this.Context = context;
