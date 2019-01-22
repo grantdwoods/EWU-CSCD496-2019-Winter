@@ -11,7 +11,7 @@ namespace SecretSanta.Import.Services
             ValidateHeaderStart(header);
         
             string fullName = ParseFullName(header);
-            string[] names = separateFirstAndLast(fullName);
+            string[] names = SeparateFirstAndLast(fullName);
 
             if (!CheckNamesArray(names))
             {
@@ -58,7 +58,7 @@ namespace SecretSanta.Import.Services
             fullName = fullName.Trim();
             return fullName;
         }
-        private string[] separateFirstAndLast(string fullName)
+        private string[] SeparateFirstAndLast(string fullName)
         {
             string[] names;
 
