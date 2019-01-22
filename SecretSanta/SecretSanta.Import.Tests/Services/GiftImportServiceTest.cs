@@ -35,7 +35,7 @@ namespace SecretSanta.Import.Tests
             Directory.Delete(dirPath);
         }
         [TestMethod]
-        public void ImportGifts_Valid_Format()
+        public void ImportGifts_ValidFormat_ReturnGiftCollection()
         {
             GiftImportService giftImportService = new GiftImportService();
 
@@ -48,7 +48,7 @@ namespace SecretSanta.Import.Tests
             };
             File.WriteAllLines(tmpFilePath, wishList);
 
-            //giftImportService.ImportGifts(tmpFilePath);
+            giftImportService.ImportGifts(tmpFilePath);
 
             File.Delete(tmpFilePath);
         }

@@ -13,11 +13,7 @@ namespace SecretSanta.Import.Services
             string fullName = ParseFullName(header);
             string[] names = SeparateFirstAndLast(fullName);
 
-            if (!CheckNamesArray(names))
-            {
-                throw new ArgumentException(nameof(header), 
-                    "first or last name missing.");
-            }
+            ValidateNamesArray(names);
 
             return names;
         }
@@ -35,28 +31,34 @@ namespace SecretSanta.Import.Services
                     "Header must start with \"Name: \"");
             }
         }
-        private bool CheckNamesArray(string[] names)
+        private void ValidateNamesArray(string[] names)
         {
             bool isValid = true;
+
             if(names.Length !=2 )
             {
                 isValid = false;
             }
-
-            foreach(string name in names)
+            else
             {
-                if (string.IsNullOrEmpty(name))
+                foreach (string name in names)
                 {
-                    isValid = false;
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        isValid = false;
+                    }
                 }
             }
-            return isValid;
+            if (!isValid)
+            {
+                throw new ArgumentException(nameof(names),
+                    "first or last name missing.");
+            }
         }
         private string ParseFullName(string header)
         {
             string fullName = header.Substring(header.IndexOf(':') + 1);
-            fullName = fullName.Trim();
-            return fullName;
+            return fullName.Trim();
         }
         private string[] SeparateFirstAndLast(string fullName)
         {
