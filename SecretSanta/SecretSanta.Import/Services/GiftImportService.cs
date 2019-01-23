@@ -26,7 +26,7 @@ namespace SecretSanta.Import.Services
             {
                 if(!string.IsNullOrWhiteSpace(lines[i]))
                 {
-                    wishList.Add(new Gift { User = user, Description = lines[i] });
+                    wishList.Add(new Gift { User = user, Title = lines[i] });
                 }
             }
             return wishList;

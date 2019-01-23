@@ -51,11 +51,10 @@ namespace SecretSanta.Import.Tests
             File.WriteAllLines(tmpFilePath, fileInputArray);
 
             ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
-
-            Assert.AreEqual<int>(3, gifts.Count);
-            //Assert.AreEqual<string>("Grant", wishList[0].User.FirstName);
-            //Assert.AreEqual<string>("Woods", wishList[1].User.LastName);
-            //Assert.AreEqual<string>("Gift3", wishList[2].Description);
+            List<Gift> wishList = new List<Gift>(gifts);
+            Assert.AreEqual<string>("Grant", wishList[0].User.FirstName);
+            Assert.AreEqual<string>("Woods", wishList[1].User.LastName);
+            Assert.AreEqual<string>("Gift3", wishList[2].Title);
 
             File.Delete(tmpFilePath);
         }
