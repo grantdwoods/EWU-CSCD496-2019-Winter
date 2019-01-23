@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecretSanta.Domain.Models;
 using SecretSanta.Import.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -20,7 +22,7 @@ namespace SecretSanta.Import.Tests
 
             if (Directory.Exists(dirPath))
                 CleanUpDirectory();
-
+            
             Directory.CreateDirectory(dirPath);
             tmpFilePath = Path.Combine(dirPath, "userGifts.tmp");
         }
@@ -39,16 +41,21 @@ namespace SecretSanta.Import.Tests
         {
             GiftImportService giftImportService = new GiftImportService();
 
-            string[] wishList = 
+            string[] fileInputArray = 
             {
                 "Name: Grant Woods",
                 "Gift1",
                 "Gift2",
                 "Gift3"
             };
-            File.WriteAllLines(tmpFilePath, wishList);
+            File.WriteAllLines(tmpFilePath, fileInputArray);
 
-            giftImportService.ImportGifts(tmpFilePath);
+            ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
+
+            Assert.AreEqual<int>(3, gifts.Count);
+            //Assert.AreEqual<string>("Grant", wishList[0].User.FirstName);
+            //Assert.AreEqual<string>("Woods", wishList[1].User.LastName);
+            //Assert.AreEqual<string>("Gift3", wishList[2].Description);
 
             File.Delete(tmpFilePath);
         }

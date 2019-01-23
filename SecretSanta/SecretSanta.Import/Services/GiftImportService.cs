@@ -14,12 +14,22 @@ namespace SecretSanta.Import.Services
             this.NameParsingService = new NameParsingService();
         }
         
-        public void ImportGifts(string filePath)
+        public ICollection<Gift> ImportGifts(string filePath)
         {
             string[] lines = File.ReadAllLines(filePath);
             string[] firstLast = NameParsingService.ParseHeader(lines[0]);
             User user = new User { FirstName = firstLast[0], LastName = firstLast[1] };
 
+            List<Gift> wishList = new List<Gift>();
+
+            for(int i = 1; i < lines.Length; i++)
+            {
+                if(!string.IsNullOrWhiteSpace(lines[i]))
+                {
+                    wishList.Add(new Gift { User = user, Description = lines[i] });
+                }
+            }
+            return wishList;
         }
     }
 }
