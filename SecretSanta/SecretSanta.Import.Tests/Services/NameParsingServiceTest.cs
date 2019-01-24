@@ -61,13 +61,12 @@ namespace SecretSanta.Import.Tests
             string[] names = giftImportService.ParseHeader(": Woods, Grant");
         }
         [TestMethod]
-        [DataRow("Name:", typeof(ArgumentException))]
-        [DataRow("Name:           ", typeof(ArgumentException))]
-        [DataRow("Name: Grant", typeof(ArgumentException))]
-        [DataRow("Name: Woods,", typeof(ArgumentException))]
-        [DataRow("Name:  , Grant", typeof(ArgumentException))]
-        public void ParseHeader_InvalidMissingFirstLast_ThrowsArgumentException(string header, 
-            Type exceptionType)
+        [DataRow("Name:")]
+        [DataRow("Name:           ")]
+        [DataRow("Name: Grant")]
+        [DataRow("Name: Woods,")]
+        [DataRow("Name:  , Grant")]
+        public void ParseHeader_InvalidMissingFirstLast_ThrowsArgumentException(string header)
         {
             NameParsingService giftImportService = CreateDefaultImporter();
             try
@@ -76,7 +75,7 @@ namespace SecretSanta.Import.Tests
             }
             catch (ArgumentException exception) 
             {
-                Assert.AreEqual<Type>(exceptionType, exception.GetType() );
+                Assert.AreEqual<Type>(typeof(ArgumentException), exception.GetType() );
             }
            
         }

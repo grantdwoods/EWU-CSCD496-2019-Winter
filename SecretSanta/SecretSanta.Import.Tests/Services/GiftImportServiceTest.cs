@@ -22,7 +22,7 @@ namespace SecretSanta.Import.Tests
 
             if (Directory.Exists(dirPath))
                 CleanUpDirectory();
-            
+
             Directory.CreateDirectory(dirPath);
             tmpFilePath = Path.Combine(dirPath, "userGifts.tmp");
         }
@@ -30,7 +30,7 @@ namespace SecretSanta.Import.Tests
         public void CleanUpDirectory()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(dirPath);
-            foreach(FileInfo file in dirInfo.GetFiles())
+            foreach (FileInfo file in dirInfo.GetFiles())
             {
                 File.Delete(file.FullName);
             }
@@ -39,6 +39,7 @@ namespace SecretSanta.Import.Tests
         [TestMethod]
         public void ImportGifts_ValidFormat_ReturnGiftCollection()
         {
+
             GiftImportService giftImportService = new GiftImportService();
 
             string[] fileInputArray = 
@@ -58,7 +59,10 @@ namespace SecretSanta.Import.Tests
 
             File.Delete(tmpFilePath);
         }
+        [TestMethod]
+        public void ImportGifts_InvalidFile_ArgumentException()
+        {
 
-
+        }
     }
 }
