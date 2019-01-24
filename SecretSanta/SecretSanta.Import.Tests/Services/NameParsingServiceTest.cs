@@ -73,7 +73,7 @@ namespace SecretSanta.Import.Tests
             {
                 string[] names = giftImportService.ParseHeader(header);
             }
-            catch (ArgumentException exception) 
+            catch (Exception exception) 
             {
                 Assert.AreEqual<Type>(typeof(ArgumentException), exception.GetType() );
             }

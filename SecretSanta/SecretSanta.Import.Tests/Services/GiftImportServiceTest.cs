@@ -49,6 +49,7 @@ namespace SecretSanta.Import.Tests
                 "Gift2",
                 "Gift3"
             };
+
             File.WriteAllLines(tmpFilePath, fileInputArray);
 
             ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
@@ -60,9 +61,47 @@ namespace SecretSanta.Import.Tests
             File.Delete(tmpFilePath);
         }
         [TestMethod]
-        public void ImportGifts_InvalidFile_ArgumentException()
+        public void ImportGifts_ValidFormatWithEmptyorWhiteSpaceLines_ReturnGiftCollection()
         {
 
+            GiftImportService giftImportService = new GiftImportService();
+
+            string[] fileInputArray =
+            {
+                "Name: Grant Woods",
+                "",
+                "",
+                "   ",
+                "Gift1",
+                "Gift2",
+                "",
+                "Gift3",
+                ""
+            };
+
+            File.WriteAllLines(tmpFilePath, fileInputArray);
+
+            ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
+            List<Gift> wishList = new List<Gift>(gifts);
+            Assert.AreEqual<string>("Grant", wishList[0].User.FirstName);
+            Assert.AreEqual<string>("Woods", wishList[1].User.LastName);
+            Assert.AreEqual<string>("Gift3", wishList[2].Title);
+
+            File.Delete(tmpFilePath);
+        }
+
+        [TestMethod]
+        public void ImportGifts_InvalidFile_ThrowsFileNotFoundException()
+        {
+            try
+            {
+                GiftImportService giftImportService = new GiftImportService();
+                ICollection<Gift> gifts = giftImportService.ImportGifts("THEFILE");
+            }
+            catch(Exception exception)
+            {
+                Assert.AreEqual<Type>(typeof(FileNotFoundException), exception.GetType());
+            }
         }
     }
 }
