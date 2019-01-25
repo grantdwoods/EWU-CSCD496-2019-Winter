@@ -37,18 +37,11 @@ namespace SecretSanta.Import.Tests
             Directory.Delete(dirPath);
         }
         [TestMethod]
-        public void ImportGifts_ValidFormat_ReturnGiftCollection()
+        [DataRow(new[] { "Name: Grant Woods", "Gift1", "Gift2", "Gift3" })]
+        [DataRow(new[] { "Name: Grant Woods", "", "Gift1", "  ", "Gift2", "", "Gift3", "" })]
+        public void ImportGifts_ValidFormat_ReturnGiftCollection(string[] fileInputArray)
         {
-
             GiftImportService giftImportService = new GiftImportService();
-
-            string[] fileInputArray = 
-            {
-                "Name: Grant Woods",
-                "Gift1",
-                "Gift2",
-                "Gift3"
-            };
 
             File.WriteAllLines(tmpFilePath, fileInputArray);
 
@@ -61,33 +54,22 @@ namespace SecretSanta.Import.Tests
             File.Delete(tmpFilePath);
         }
         [TestMethod]
-        public void ImportGifts_ValidFormatWithEmptyorWhiteSpaceLines_ReturnGiftCollection()
+        [DataRow(new[] { "Name: Grant Woods", "", "", "" })]
+        public void ImportGifts_ValidHeaderMissingGifts_ThrowsArgumentException(string[] fileInputArray)
         {
-
             GiftImportService giftImportService = new GiftImportService();
 
-            string[] fileInputArray =
-            {
-                "Name: Grant Woods",
-                "",
-                "",
-                "   ",
-                "Gift1",
-                "Gift2",
-                "",
-                "Gift3",
-                ""
-            };
-
             File.WriteAllLines(tmpFilePath, fileInputArray);
-
-            ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
-            List<Gift> wishList = new List<Gift>(gifts);
-            Assert.AreEqual<string>("Grant", wishList[0].User.FirstName);
-            Assert.AreEqual<string>("Woods", wishList[1].User.LastName);
-            Assert.AreEqual<string>("Gift3", wishList[2].Title);
-
-            File.Delete(tmpFilePath);
+            try
+            {
+                ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
+                Assert.Fail();
+            }
+            catch(Exception exception)
+            {
+                Assert.AreEqual<Type>(typeof(ArgumentException), exception.GetType());
+                File.Delete(tmpFilePath);
+            }
         }
 
         [TestMethod]
