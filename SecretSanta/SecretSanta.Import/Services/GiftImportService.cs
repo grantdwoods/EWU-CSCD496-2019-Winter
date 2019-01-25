@@ -29,6 +29,10 @@ namespace SecretSanta.Import.Services
                     wishList.Add(new Gift { User = user, Title = lines[i] });
                 }
             }
+            if(wishList.Count == 0)
+            {
+                throw new ArgumentException("No gifts were found.");
+            }
             return wishList;
         }
     }
