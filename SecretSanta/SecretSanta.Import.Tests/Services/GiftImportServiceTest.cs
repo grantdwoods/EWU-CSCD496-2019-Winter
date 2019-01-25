@@ -26,6 +26,7 @@ namespace SecretSanta.Import.Tests
             Directory.CreateDirectory(dirPath);
             tmpFilePath = Path.Combine(dirPath, "userGifts.tmp");
         }
+
         [TestCleanup]
         public void CleanUpDirectory()
         {
@@ -36,6 +37,7 @@ namespace SecretSanta.Import.Tests
             }
             Directory.Delete(dirPath);
         }
+
         [TestMethod]
         [DataRow(new[] { "Name: Grant Woods", "Gift1", "Gift2", "Gift3" })]
         [DataRow(new[] { "Name: Grant Woods", "", "Gift1", "  ", "Gift2", "", "Gift3", "" })]
@@ -53,8 +55,10 @@ namespace SecretSanta.Import.Tests
 
             File.Delete(tmpFilePath);
         }
+
         [TestMethod]
         [DataRow(new[] { "Name: Grant Woods", "", "", "" })]
+        [DataRow(new[] { "Name: Grant Woods", "            ", " ", "" })]
         public void ImportGifts_ValidHeaderMissingGifts_ThrowsArgumentException(string[] fileInputArray)
         {
             GiftImportService giftImportService = new GiftImportService();
@@ -65,7 +69,7 @@ namespace SecretSanta.Import.Tests
                 ICollection<Gift> gifts = giftImportService.ImportGifts(tmpFilePath);
                 Assert.Fail();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Assert.AreEqual<Type>(typeof(ArgumentException), exception.GetType());
                 File.Delete(tmpFilePath);
@@ -79,10 +83,43 @@ namespace SecretSanta.Import.Tests
             {
                 GiftImportService giftImportService = new GiftImportService();
                 ICollection<Gift> gifts = giftImportService.ImportGifts("THEFILE");
+                Assert.Fail();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Assert.AreEqual<Type>(typeof(FileNotFoundException), exception.GetType());
+            }
+        }
+
+        [TestMethod]
+        public void ImportGifts_InvalidFileNull_ThrowsArgumentNullException()
+        {
+            try
+            {
+                GiftImportService giftImportService = new GiftImportService();
+                ICollection<Gift> gifts = giftImportService.ImportGifts(null);
+                Assert.Fail();
+            }
+            catch (Exception exception)
+            {
+                Assert.AreEqual<Type>(typeof(ArgumentNullException), exception.GetType());
+            }
+        }
+
+        [TestMethod]
+        [DataRow("")]
+        [DataRow("   ")]
+        public void ImportGifts_InvalidFileEmptyOrWhipeSpaceString_ThrowsArgumentException(string filePath)
+        {
+            try
+            {
+                GiftImportService giftImportService = new GiftImportService();
+                ICollection<Gift> gifts = giftImportService.ImportGifts(filePath);
+                Assert.Fail();
+            }
+            catch (Exception exception)
+            {
+                Assert.AreEqual<Type>(typeof(ArgumentException), exception.GetType());
             }
         }
     }
