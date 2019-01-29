@@ -14,5 +14,9 @@ namespace SecretSanta.Api.Tests
             GetGiftsForUser_UserId = userId;
             return ToReturn;
         }
+        public Gift AddGiftToUser(int userId, Gift gift)
+        {
+            return null;
+        }
     }
 }

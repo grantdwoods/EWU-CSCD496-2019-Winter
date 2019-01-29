@@ -30,5 +30,10 @@ namespace SecretSanta.Api.Controllers
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
+        [HttpPost("{userid, title, decription}")]
+        public void PostGiftForUser(int userid, string title, string decription)
+        {
+
+        }
     }
 }
