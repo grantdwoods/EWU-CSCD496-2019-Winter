@@ -47,9 +47,38 @@ namespace SecretSanta.Api.Controllers
             return Created($"api/gift/{gift.UserId}", returnGift);
         }
 
-        public object PutUserGift(int v, Domain.Models.Gift gift)
+        [HttpPut("{userid, gift}")]
+        public ActionResult PutUserGift(int userId, Domain.Models.Gift gift)
         {
-            throw new NotImplementedException();
+            if (gift == null || userId <= 0)
+            {
+                return BadRequest();
+            }
+
+            Domain.Models.Gift updatedGift = _GiftService.UpdateGiftForUser(userId, gift);
+
+            if (GiftsAreEqual(updatedGift, gift))
+            {
+                return Ok("Gift updated!");
+            }
+            return BadRequest();
+        }
+
+        private bool GiftsAreEqual(Domain.Models.Gift updatedGift, Domain.Models.Gift gift)
+        {
+            return (updatedGift.Description == gift.Description &&
+                    updatedGift.Id == gift.Id &&
+                    updatedGift.OrderOfImportance == gift.OrderOfImportance &&
+                    updatedGift.Url == gift.Url &&
+                    updatedGift.User == gift.User &&
+                    updatedGift.UserId == gift.UserId);
+        }
+
+        [HttpDelete("{gift}")]
+        public ActionResult DeleteGift(Domain.Models.Gift gift)
+        {
+            _GiftService.RemoveGift(gift);
+            return Ok("Gift removed!");
         }
     }
 }

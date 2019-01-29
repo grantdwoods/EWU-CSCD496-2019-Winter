@@ -14,6 +14,13 @@ namespace SecretSanta.Api.Tests
     [TestClass]
     public class GiftControllerTests
     {
+        protected AutoMocker Mocker { get; private set; }
+        [TestInitialize]
+        public void CreateMocker()
+        {
+            Mocker = new AutoMocker();
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GiftController_RequiresGiftService()
@@ -24,8 +31,6 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void GetGiftsForUser_ReturnsUserGiftList()
         {
-            var mocker = new AutoMocker();
-            
             List<Gift> gifts = new List<Gift>();
             var gift = Mock.Of<Gift>(g =>
             g.UserId == 4 &&
@@ -35,7 +40,7 @@ namespace SecretSanta.Api.Tests
             g.OrderOfImportance == 9000);
             gifts.Add(gift);
 
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.GetGiftsForUser(4)).Returns(gifts).Verifiable();
 
             var controller = new GiftController(mockGiftService.Object);
@@ -56,8 +61,7 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void GetGiftForUser_RequiresPositiveUserId()
         {
-            var mocker = new AutoMocker();
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
 
             var controller = new GiftController(mockGiftService.Object);
 
@@ -71,10 +75,9 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_ValidInput_Returns201ResultWithUrlAndDTO()
         {
-            var mocker = new AutoMocker();
-            var gift = mocker.CreateInstance<Gift>();
+            var gift = Mocker.CreateInstance<Gift>();
 
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()))
                 .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid;})
                 .Returns(gift).Verifiable();
@@ -93,10 +96,9 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_NullGift_Returns400()
         {
-            var mocker = new AutoMocker();
             Gift gift = null;
 
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()));
 
             var controller = new GiftController(mockGiftService.Object);
@@ -110,10 +112,9 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_UserIDlessThanOrEqualToZero_Returns400()
         {
-            var mocker = new AutoMocker();
-            var gift = mocker.CreateInstance<Gift>();
+            var gift = Mocker.CreateInstance<Gift>();
 
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()));
 
             var controller = new GiftController(mockGiftService.Object);
@@ -127,15 +128,51 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void UpdateGiftForUser_ValidInput_Returns201()
         {
-            var mocker = new AutoMocker();
-            var gift = mocker.CreateInstance<Gift>();
-            var mockGiftService = mocker.GetMock<IGiftService>();
+            var gift = Mocker.CreateInstance<Gift>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
+
+            mockGiftService.Setup(x => x.UpdateGiftForUser(2, gift))
+                .Returns(gift).Verifiable();
 
             var controller = new GiftController(mockGiftService.Object);
 
-            var results = (OkResult)controller.PutUserGift(4, gift);
+            OkObjectResult results = (OkObjectResult)controller.PutUserGift(2, gift);
 
             Assert.AreEqual<int?>(200, results.StatusCode);
+            Assert.AreEqual<string>("Gift updated!", results.Value.ToString());
+            mockGiftService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_NullGift_Returns400()
+        {
+            Gift gift = null;
+            var mockGiftService = Mocker.GetMock<IGiftService>();
+
+            mockGiftService.Setup(x => x.UpdateGiftForUser(2, gift)).Verifiable();
+
+            var controller = new GiftController(mockGiftService.Object);
+
+            BadRequestResult results = (BadRequestResult)controller.PutUserGift(2, gift);
+
+            Assert.AreEqual<int?>(400, results.StatusCode);
+            mockGiftService.Verify(x => x.UpdateGiftForUser(2, gift), Times.Never);
+        }
+
+        [TestMethod]
+        public void RemoveGift_Returns200()
+        {
+            var gift = Mocker.CreateInstance<Gift>();
+            var mockGiftService = Mocker.GetMock<IGiftService>();
+
+            mockGiftService.Setup(x => x.RemoveGift(gift));
+
+            var controller = new GiftController(mockGiftService.Object);
+
+            OkObjectResult results = (OkObjectResult)controller.DeleteGift(gift);
+
+            Assert.AreEqual<int?>(200, results.StatusCode);
+            mockGiftService.VerifyAll();
         }
 
     }
