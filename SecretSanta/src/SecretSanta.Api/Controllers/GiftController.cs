@@ -40,7 +40,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DtoToDomain(gift);
+            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
             _GiftService.AddGiftToUser(userId, domainGift);
 
             DTO.Gift returnGift = new DTO.Gift(domainGift);
@@ -56,7 +56,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DtoToDomain(gift);
+            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
             Domain.Models.Gift updatedGift = _GiftService.UpdateGiftForUser(userId, domainGift);
 
             if (GiftsAreEqual(updatedGift, gift))
@@ -83,22 +83,9 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DtoToDomain(gift);
+            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
             _GiftService.RemoveGift(domainGift);
             return Ok("Gift removed!");
-        }
-        private Domain.Models.Gift DtoToDomain(DTO.Gift gift)
-        {
-            Domain.Models.Gift domainGift = new Domain.Models.Gift
-            {
-                Id = gift.Id,
-                Title = gift.Title,
-                Description = gift.Description,
-                Url = gift.Url,
-                UserId = gift.UserId,
-                OrderOfImportance = gift.OrderOfImportance
-            };
-            return domainGift;
         }
     }
 }

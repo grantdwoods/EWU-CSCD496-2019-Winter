@@ -5,7 +5,7 @@ using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
 {
-    public class GroupService
+    public class GroupService : IGroupService
     {
         private ApplicationDbContext DbContext { get; }
 
@@ -31,6 +31,11 @@ namespace SecretSanta.Domain.Services
         public List<Group> FetchAll()
         {
             return DbContext.Groups.ToList();
+        }
+
+        public void DeleteGroup(Group group)
+        {
+
         }
     }
 }
