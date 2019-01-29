@@ -73,7 +73,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_ValidInput_Returns201ResultWithUrlAndDTO()
+        public void PostGiftToUser_ValidInput_Returns201ResultWithUrlAndDTO()
         {
             var gift = Mocker.CreateInstance<DTO.Gift>();
 
@@ -92,7 +92,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_NullGift_Returns400()
+        public void PostGiftToUser_NullGift_Returns400()
         {
             MockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()));
 
@@ -105,7 +105,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_UserIDlessThanOrEqualToZero_Returns400()
+        public void PostGiftToUser_UserIDlessThanOrEqualToZero_Returns400()
         {
             var gift = Mocker.CreateInstance<DTO.Gift>();
 
@@ -120,7 +120,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void UpdateGiftForUser_ValidInput_Returns201()
+        public void PutGiftForUser_ValidInput_Returns201()
         {
             var gift = Mocker.CreateInstance<DTO.Gift>();
             var domainGift = Mocker.CreateInstance<Gift>();
@@ -139,7 +139,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void UpdateGiftForUser_NullGift_Returns400()
+        public void PutGiftForUser_NullGift_Returns400()
         {
             MockGiftService = Mocker.GetMock<IGiftService>();
 
@@ -154,7 +154,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void RemoveGift_Returns200()
+        public void DeleteGift_Returns200()
         {
             DTO.Gift gift = Mocker.CreateInstance<DTO.Gift>();
 
@@ -169,7 +169,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void RemoveGift_NullGift_Returns400()
+        public void DeleteGift_NullGift_Returns400()
         {
             MockGiftService.Setup(x => x.RemoveGift(It.IsAny<Gift>())).Verifiable();
 

@@ -22,10 +22,11 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{user}")]
         public ActionResult PostUser(DTO.User user)
         {
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
+
             Domain.Models.User domainUser = DtoToDomain(user);
             _UserService.AddUser(domainUser);
             DTO.User returnUser = new DTO.User(domainUser);
@@ -42,6 +43,11 @@ namespace SecretSanta.Api.Controllers
                 LastName = user.LastName
             };
             return domainGift;
+        }
+
+        public object PutUser(DTO.User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

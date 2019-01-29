@@ -21,13 +21,6 @@ namespace SecretSanta.Domain.Services
             return user;
         }
 
-        public User UpdateUser(User user)
-        {
-            DbContext.Users.Update(user);
-            DbContext.SaveChanges();
-            return user;
-        }
-
         public List<User> FetchAll()
         {
             return DbContext.Users.ToList();
@@ -36,6 +29,13 @@ namespace SecretSanta.Domain.Services
         public void DeleteUser(User user)
         {
             throw new NotImplementedException();
+        }
+
+        public User UpdateUser(User user)
+        {
+            DbContext.Users.Update(user);
+            DbContext.SaveChanges();
+            return user;
         }
     }
 }
