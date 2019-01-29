@@ -80,8 +80,7 @@ namespace SecretSanta.Api.Tests
             
             var mockGiftService = Mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()))
-                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; })
-                .Returns(new Gift { UserId = 2 }).Verifiable();
+                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; });
 
             var controller = new GiftController(mockGiftService.Object);
             var result = (CreatedResult)controller.PostGiftToUser(2, gift);
