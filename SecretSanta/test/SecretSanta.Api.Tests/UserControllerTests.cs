@@ -52,7 +52,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddUser_NullUser_Returns400()
+        public void PostUser_NullUser_Returns400()
         {
             MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
 
@@ -61,6 +61,21 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(400, result.StatusCode);
             MockUserService.Verify(x => x.AddUser(It.IsAny<User>()), Times.Never);
+        }
+
+        [TestMethod]
+        public void PutUser_ValidUser_Rurns200()
+        {
+            MockUserService.Setup(x => x.UpdateUser(It.IsAny<User>()));
+            DTO.User user = new DTO.User{
+                FirstName = "Grant",
+                LastName = "Woods"
+            };
+
+            var controller = new UserController(MockUserService.Object);
+            OkObjectResult result = (OkObjectResult)controller.PutUser(user);
+
+            Assert.AreEqual<int?>(200, result.StatusCode);
         }
     }
 }

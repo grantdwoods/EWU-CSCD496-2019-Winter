@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
-        [HttpPost("{userid, gift}")]
+        [HttpPost("{userId, gift}")]
         public ActionResult PostGiftToUser(int userId, DTO.Gift gift)
         {
             if (gift == null || userId <= 0)
@@ -48,7 +48,7 @@ namespace SecretSanta.Api.Controllers
             return Created($"api/Gift/{returnGift.UserId}", returnGift);
         }
 
-        [HttpPut("{userid, gift}")]
+        [HttpPut("{userId, gift}")]
         public ActionResult PutUserGift(int userId, DTO.Gift gift)
         {
             if (gift == null || userId <= 0)
