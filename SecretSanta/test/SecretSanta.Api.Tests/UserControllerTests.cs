@@ -76,6 +76,21 @@ namespace SecretSanta.Api.Tests
             OkObjectResult result = (OkObjectResult)controller.PutUser(user);
 
             Assert.AreEqual<int?>(200, result.StatusCode);
+            MockUserService.VerifyAll();
         }
+
+        [TestMethod]
+        public void PutUser_NullUser_Returns400()
+        {
+            MockUserService.Setup(x => x.UpdateUser(It.IsAny<User>())).Verifiable();
+
+            var controller = new UserController(MockUserService.Object);
+            BadRequestResult result = (BadRequestResult)controller.PutUser(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockUserService.Verify(x => x.UpdateUser(It.IsAny<User>()), Times.Never);
+        }
+
+
     }
 }

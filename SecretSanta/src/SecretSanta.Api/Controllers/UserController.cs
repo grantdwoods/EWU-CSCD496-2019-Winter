@@ -34,6 +34,18 @@ namespace SecretSanta.Api.Controllers
             return Created($"api/User/{returnUser.Id}", returnUser);
         }
 
+        [HttpPut("{user}")]
+        public ActionResult PutUser(DTO.User user)
+        {
+            if(user == null)
+            {
+                return BadRequest();
+            }
+
+            Domain.Models.User domainUser = DtoToDomain(user);
+            _UserService.UpdateUser(domainUser);
+            return Ok("User updated!");
+        }
         private Domain.Models.User DtoToDomain(DTO.User user)
         {
             Domain.Models.User domainGift = new Domain.Models.User
@@ -43,11 +55,6 @@ namespace SecretSanta.Api.Controllers
                 LastName = user.LastName
             };
             return domainGift;
-        }
-
-        public object PutUser(DTO.User user)
-        {
-            throw new NotImplementedException();
         }
     }
 }
