@@ -9,6 +9,7 @@ namespace SecretSanta.Api.DTO
         public string Description { get; set; }
         public int OrderOfImportance { get; set; }
         public string Url { get; set; }
+        public int UserID { get; set; }
 
         public Gift()
         {
@@ -24,6 +25,7 @@ namespace SecretSanta.Api.DTO
             Description = gift.Description;
             OrderOfImportance = gift.OrderOfImportance;
             Url = gift.Url;
+            UserID = gift.UserId;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Api.DTO;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 
@@ -26,7 +27,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
-            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            List<Domain.Models.Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
@@ -34,6 +35,11 @@ namespace SecretSanta.Api.Controllers
         public void PostGiftForUser(int userid, string title, string decription)
         {
 
+        }
+
+        public DTO.Gift AddGiftToUser(Domain.Models.Gift gift)
+        {
+            throw new NotImplementedException();
         }
     }
 }
