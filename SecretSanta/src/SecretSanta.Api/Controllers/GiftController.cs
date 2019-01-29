@@ -32,12 +32,16 @@ namespace SecretSanta.Api.Controllers
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
 
-        [HttpPost("{userid, title, decription}")]
+        [HttpPost("{userid, gift}")]
         public CreatedResult PostGiftToUser(int userId, Domain.Models.Gift gift)
         {
 
-            DTO.Gift returnGift = new DTO.Gift(gift);
-            returnGift.UserID = userId;
+            Domain.Models.Gift insertedGift = _GiftService.AddGiftToUser(userId, gift);
+
+            DTO.Gift returnGift = new DTO.Gift(insertedGift)
+            {
+                UserID = userId
+            };
             return Created($"api/gift/{gift.UserId}", returnGift);
         }
     }
