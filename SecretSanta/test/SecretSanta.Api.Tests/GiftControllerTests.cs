@@ -67,7 +67,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_Sucess_GiftUserIDChanged()
+        public void AddGiftToUser_Sucess_201ResultWithUrl()
         {
             var mocker = new AutoMocker();
             var gift = mocker.CreateInstance<Gift>();
@@ -77,9 +77,13 @@ namespace SecretSanta.Api.Tests
                 .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; }).Returns(gift).Verifiable();
 
             var controller = new GiftController(mockGiftService.Object);
-            DTO.Gift giftReturn = controller.AddGiftToUser(gift);
+            var result = controller.PostGiftToUser(2, gift);
 
-            Assert.AreNotEqual<int>(0, giftReturn.UserID);
+            var returendGift = (DTO.Gift)result.Value;
+
+            Assert.AreEqual<int?>(201, result.StatusCode);
+            Assert.AreEqual<int>(2, returendGift.UserID);
+            Assert.AreEqual<string>($"api/gift/{returendGift.Id}", result.Location);
         }
     }
 }
