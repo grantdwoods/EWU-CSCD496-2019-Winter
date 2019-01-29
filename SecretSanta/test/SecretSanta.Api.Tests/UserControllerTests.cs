@@ -91,6 +91,16 @@ namespace SecretSanta.Api.Tests
             MockUserService.Verify(x => x.UpdateUser(It.IsAny<User>()), Times.Never);
         }
 
+        [TestMethod]
+        public void DeleteUser_Retuns200()
+        {
+            MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
+            DTO.User user = Mocker.CreateInstance<DTO.User>();
 
+            var controller = new UserController(MockUserService.Object);
+            OkResult result = (OkResult)controller.DeleteUser(user);
+
+            Assert.AreEqual<int?>(200, result.StatusCode);
+        }
     }
 }
