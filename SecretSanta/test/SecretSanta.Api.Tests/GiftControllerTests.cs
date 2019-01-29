@@ -67,14 +67,14 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_Sucess_201ResultWithUrl()
+        public void AddGiftToUser_201ResultWithUrl()
         {
             var mocker = new AutoMocker();
             var gift = mocker.CreateInstance<Gift>();
 
             var mockGiftService = mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()))
-                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; }).Returns(gift).Verifiable();
+                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; });
 
             var controller = new GiftController(mockGiftService.Object);
             var result = controller.PostGiftToUser(2, gift);
@@ -83,7 +83,23 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreEqual<int>(2, returendGift.UserID);
-            Assert.AreEqual<string>($"api/gift/{returendGift.Id}", result.Location);
+            Assert.AreEqual<string>($"api/gift/{returendGift.UserID}", result.Location);
+        }
+
+        public void AddGiftToUser_NullGift_Returns401()
+        {
+            var mocker = new AutoMocker();
+            Gift gift = null;
+
+            var mockGiftService = mocker.GetMock<IGiftService>();
+            mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()))
+                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; });
+
+            var controller = new GiftController(mockGiftService.Object);
+            var result = controller.PostGiftToUser(2, gift);
+
+            Assert.AreEqual<int?>(401, result.StatusCode);
+
         }
     }
 }
