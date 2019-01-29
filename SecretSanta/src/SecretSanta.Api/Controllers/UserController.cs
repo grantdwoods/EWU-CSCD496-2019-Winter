@@ -37,7 +37,7 @@ namespace SecretSanta.Api.Controllers
         [HttpPut("{user}")]
         public ActionResult PutUser(DTO.User user)
         {
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
@@ -56,7 +56,7 @@ namespace SecretSanta.Api.Controllers
             };
             return domainGift;
         }
-
+        [HttpDelete("{user}")]
         public ActionResult DeleteUser(DTO.User user)
         {
             if(user == null)
