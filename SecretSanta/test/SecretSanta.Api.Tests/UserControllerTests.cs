@@ -23,9 +23,22 @@ namespace SecretSanta.Api.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void GiftController_RequiresGiftService()
+        public void UserController_RequiresUserService()
         {
             new UserController(null);
+        }
+
+        [TestMethod]
+        public void AddUser_ValidInput_Returns201WithUrlAndObjectCreated()
+        {
+            var mockUserService = Mocker.GetMock<IUserService>();
+            DTO.User user = new DTO.User {
+                FirstName = "Grant", LastName = "Woods", Id = 1};
+
+            var controller = new UserController(mockUserService.Object);
+            var result = (CreatedResult)controller.PostUser(user);
+
+            Assert.AreEqual<int?>(201, result.StatusCode);
         }
     }
 }
