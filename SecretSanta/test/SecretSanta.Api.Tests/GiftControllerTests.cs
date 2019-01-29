@@ -67,17 +67,19 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void UpdateGiftForUser_UpdateSucess()
+        public void AddGiftToUser_Sucess_GiftUserIDChanged()
         {
-            Gift gift = new Gift{
-                Title = "",
-                Description = "",
-                Url = ""
-            };
-            Mock<IGiftService> mockGiftService = new Mock<IGiftService>();
+            var mocker = new AutoMocker();
+            var gift = mocker.CreateInstance<Gift>();
 
+            var mockGiftService = mocker.GetMock<IGiftService>();
+            mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()))
+                .Callback((int userid, Gift giftIn) => { giftIn.UserId = userid; }).Returns(gift).Verifiable();
 
             var controller = new GiftController(mockGiftService.Object);
+            DTO.Gift giftReturn = controller.AddGiftToUser(gift);
+
+            Assert.AreNotEqual<int>(0, giftReturn.UserID);
         }
     }
 }
