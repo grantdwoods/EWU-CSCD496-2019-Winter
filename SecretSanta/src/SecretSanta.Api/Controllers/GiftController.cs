@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{userid, gift}")]
         public ActionResult PostGiftToUser(int userId, Domain.Models.Gift gift)
         {
-            if(gift == null || userId <=0)
+            if(gift == null || userId <= 0)
             {
                 return BadRequest();
             }
@@ -45,6 +45,11 @@ namespace SecretSanta.Api.Controllers
             DTO.Gift returnGift = new DTO.Gift(insertedGift);
 
             return Created($"api/gift/{gift.UserId}", returnGift);
+        }
+
+        public object PutUserGift(int v, Domain.Models.Gift gift)
+        {
+            throw new NotImplementedException();
         }
     }
 }
