@@ -22,34 +22,33 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetGiftForUser_ReturnsUsersFromService()
+        public void GetGiftsForUser_ReturnsUserGiftList()
         {
+            var mocker = new AutoMocker();
+            
             List<Gift> gifts = new List<Gift>();
-            var gift = new Gift
-            {
-                Id = 3,
-                Title = "Gift Tile",
-                Description = "Gift Description",
-                Url = "http://www.gift.url",
-                OrderOfImportance = 1
-            };
+            var gift = Mock.Of<Gift>(g =>
+            g.UserId == 4 &&
+            g.Title == "A GIFT" &&
+            g.Id == 1 &&
+            g.Url == "www.theonlygift.com" &&
+            g.OrderOfImportance == 9000);
             gifts.Add(gift);
 
-            Mock<IGiftService> mockGiftService = new Mock<IGiftService>();
+            var mockGiftService = mocker.GetMock<IGiftService>();
             mockGiftService.Setup(x => x.GetGiftsForUser(4)).Returns(gifts).Verifiable();
-
             var controller = new GiftController(mockGiftService.Object);
 
-            ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
+            ActionResult<List<DTO.Gift>> result = controller.GetGiftsForUser(4);
 
-            //Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
             DTO.Gift resultGift = result.Value.Single();
-            Assert.AreEqual(gift.Id, resultGift.Id);
-            Assert.AreEqual(gift.Title, resultGift.Title);
-            Assert.AreEqual(gift.Description, resultGift.Description);
-            Assert.AreEqual(gift.Url, resultGift.Url);
-            Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
 
+            Assert.AreEqual<int>(gift.UserId, resultGift.UserID);
+            Assert.AreEqual<int>(gift.Id, resultGift.Id);
+            Assert.AreEqual<string>(gift.Title, resultGift.Title);
+            Assert.AreEqual<string>(gift.Description, resultGift.Description);
+            Assert.AreEqual<string>(gift.Url, resultGift.Url);
+            Assert.AreEqual<int>(gift.OrderOfImportance, resultGift.OrderOfImportance);
             mockGiftService.VerifyAll();
         }
 
@@ -60,7 +59,7 @@ namespace SecretSanta.Api.Tests
             var mockGiftService = mocker.GetMock<IGiftService>();
             var controller = new GiftController(mockGiftService.Object);
 
-            ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(-1);
+            ActionResult<List<DTO.Gift>> result = controller.GetGiftsForUser(-1);
 
             Assert.IsTrue(result.Result is NotFoundResult);
 
@@ -68,7 +67,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddGiftToUser_201ResultWithUrl()
+        public void AddGiftToUser_ValidInput_Returns201ResultWithUrlAndDTO()
         {
             var mocker = new AutoMocker();
             var gift = mocker.CreateInstance<Gift>();
@@ -104,6 +103,23 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual<int?>(400, result.StatusCode);
             mockGiftService
                 .Verify(x => x.AddGiftToUser(It.IsAny<int>(),It.IsAny<Gift>()), Times.Never);
+        }
+
+        [TestMethod]
+        public void AddGiftToUser_UserIDlessThanOrEqualToZero_Returns400()
+        {
+            var mocker = new AutoMocker();
+            var gift = mocker.CreateInstance<Gift>();
+
+            var mockGiftService = mocker.GetMock<IGiftService>();
+            mockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()));
+
+            var controller = new GiftController(mockGiftService.Object);
+            var result = (BadRequestResult)controller.PostGiftToUser(0, gift);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            mockGiftService
+                .Verify(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()), Times.Never);
         }
     }
 }

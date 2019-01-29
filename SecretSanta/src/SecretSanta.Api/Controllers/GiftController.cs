@@ -21,7 +21,7 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
+        public ActionResult<List<DTO.Gift>> GetGiftsForUser(int userId)
         {
             if (userId <= 0)
             {
@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{userid, gift}")]
         public ActionResult PostGiftToUser(int userId, Domain.Models.Gift gift)
         {
-            if(gift == null)
+            if(gift == null || userId <=0)
             {
                 return BadRequest();
             }
