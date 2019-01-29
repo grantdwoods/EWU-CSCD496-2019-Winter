@@ -33,15 +33,17 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPost("{userid, gift}")]
-        public CreatedResult PostGiftToUser(int userId, Domain.Models.Gift gift)
+        public ActionResult PostGiftToUser(int userId, Domain.Models.Gift gift)
         {
+            if(gift == null)
+            {
+                return BadRequest();
+            }
 
             Domain.Models.Gift insertedGift = _GiftService.AddGiftToUser(userId, gift);
 
-            DTO.Gift returnGift = new DTO.Gift(insertedGift)
-            {
-                UserID = userId
-            };
+            DTO.Gift returnGift = new DTO.Gift(insertedGift);
+
             return Created($"api/gift/{gift.UserId}", returnGift);
         }
     }
