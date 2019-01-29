@@ -57,8 +57,13 @@ namespace SecretSanta.Api.Controllers
             return domainGift;
         }
 
-        public object DeleteUser(DTO.User user)
+        public ActionResult DeleteUser(DTO.User user)
         {
+            if(user == null)
+            {
+                return BadRequest();
+            }
+
             Domain.Models.User domainUser = DtoToDomain(user);
             _UserService.DeleteUser(domainUser);
 

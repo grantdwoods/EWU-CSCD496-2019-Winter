@@ -101,6 +101,19 @@ namespace SecretSanta.Api.Tests
             OkResult result = (OkResult)controller.DeleteUser(user);
 
             Assert.AreEqual<int?>(200, result.StatusCode);
+            MockUserService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void DeleteUser_NullUser_Rturns400()
+        {
+            MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
+            var controller = new UserController(MockUserService.Object);
+
+            BadRequestResult result = (BadRequestResult)controller.DeleteUser(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockUserService.Verify(x => x.DeleteUser(It.IsAny<User>()), Times.Never);
         }
     }
 }

@@ -27,5 +27,18 @@ namespace SecretSanta.Api.DTO
             Url = gift.Url;
             UserId = gift.UserId;
         }
+        public static Domain.Models.Gift DtoToDomain(DTO.Gift gift)
+        {
+            Domain.Models.Gift domainGift = new Domain.Models.Gift
+            {
+                Id = gift.Id,
+                Title = gift.Title,
+                Description = gift.Description,
+                Url = gift.Url,
+                UserId = gift.UserId,
+                OrderOfImportance = gift.OrderOfImportance
+            };
+            return domainGift;
+        }
     }
 }

@@ -23,5 +23,7 @@ namespace SecretSanta.Api.DTO
             FirstName = user.FirstName;
             LastName = user.LastName;
         }
+
+        
     }
 }
