@@ -54,7 +54,13 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddUser_NullUser_Returns400()
         {
-            
+            MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
+
+            var controller = new UserController(MockUserService.Object);
+            var result = (BadRequestResult)controller.PostUser(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockUserService.Verify(x => x.AddUser(It.IsAny<User>()), Times.Never);
         }
     }
 }

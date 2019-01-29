@@ -78,6 +78,11 @@ namespace SecretSanta.Api.Controllers
         [HttpDelete("{gift}")]
         public ActionResult DeleteGift(DTO.Gift gift)
         {
+            if(gift == null)
+            {
+                return BadRequest();
+            }
+
             Domain.Models.Gift domainGift = DtoToDomain(gift);
             _GiftService.RemoveGift(domainGift);
             return Ok("Gift removed!");
