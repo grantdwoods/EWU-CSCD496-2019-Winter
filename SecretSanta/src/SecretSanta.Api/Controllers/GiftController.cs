@@ -45,7 +45,7 @@ namespace SecretSanta.Api.Controllers
 
             DTO.Gift returnGift = new DTO.Gift(domainGift);
 
-            return Created($"api/gift/{returnGift.UserId}", returnGift);
+            return Created($"api/Gift/{returnGift.UserId}", returnGift);
         }
 
         [HttpPut("{userid, gift}")]

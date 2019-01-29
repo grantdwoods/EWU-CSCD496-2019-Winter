@@ -22,7 +22,22 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{user}")]
         public ActionResult PostUser(DTO.User user)
         {
-            return Created($"api/user/{user.Id}", null);
+            Domain.Models.User domainUser = DtoToDomain(user);
+            _UserService.AddUser(domainUser);
+            DTO.User returnUser = new DTO.User(domainUser);
+
+            return Created($"api/User/{returnUser.Id}", returnUser);
+        }
+
+        private Domain.Models.User DtoToDomain(DTO.User user)
+        {
+            Domain.Models.User domainGift = new Domain.Models.User
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+            return domainGift;
         }
     }
 }
