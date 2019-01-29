@@ -94,12 +94,10 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftToUser_NullGift_Returns400()
         {
-            DTO.Gift gift = null;
-
             MockGiftService.Setup(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()));
 
             var controller = new GiftController(MockGiftService.Object);
-            var result = (BadRequestResult)controller.PostGiftToUser(2, gift);
+            var result = (BadRequestResult)controller.PostGiftToUser(2, null);
 
             Assert.AreEqual<int?>(400, result.StatusCode);
             MockGiftService
@@ -143,18 +141,16 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void UpdateGiftForUser_NullGift_Returns400()
         {
-            DTO.Gift gift = null;
-            Gift domainGift = null;
             MockGiftService = Mocker.GetMock<IGiftService>();
 
-            MockGiftService.Setup(x => x.UpdateGiftForUser(2, domainGift)).Verifiable();
+            MockGiftService.Setup(x => x.UpdateGiftForUser(2, null)).Verifiable();
 
             var controller = new GiftController(MockGiftService.Object);
 
-            BadRequestResult results = (BadRequestResult)controller.PutUserGift(2, gift);
+            BadRequestResult results = (BadRequestResult)controller.PutUserGift(2, null);
 
             Assert.AreEqual<int?>(400, results.StatusCode);
-            MockGiftService.Verify(x => x.UpdateGiftForUser(2, domainGift), Times.Never);
+            MockGiftService.Verify(x => x.UpdateGiftForUser(2, null), Times.Never);
         }
 
         [TestMethod]
@@ -170,6 +166,19 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(200, results.StatusCode);
             MockGiftService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void RemoveGift_NullGift_Returns400()
+        {
+            MockGiftService.Setup(x => x.RemoveGift(It.IsAny<Gift>())).Verifiable();
+
+            var controller = new GiftController(MockGiftService.Object);
+
+            BadRequestResult results = (BadRequestResult)controller.DeleteGift(null);
+
+            Assert.AreEqual<int?>(400, results.StatusCode);
+            MockGiftService.Verify(x => x.RemoveGift(It.IsAny<Gift>()), Times.Never);
         }
 
         private Gift DtoToDomain(DTO.Gift gift)
