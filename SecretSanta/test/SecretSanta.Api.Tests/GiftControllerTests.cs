@@ -194,7 +194,5 @@ namespace SecretSanta.Api.Tests
             };
             return domainGift;
         }
-
-
     }
 }
