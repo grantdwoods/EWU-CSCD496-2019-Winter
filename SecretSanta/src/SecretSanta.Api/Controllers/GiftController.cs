@@ -41,9 +41,9 @@ namespace SecretSanta.Api.Controllers
             }
 
             Domain.Models.Gift domainGift = DtoToDomain(gift);
-            Domain.Models.Gift insertedGift = _GiftService.AddGiftToUser(userId, domainGift);
+            _GiftService.AddGiftToUser(userId, domainGift);
 
-            DTO.Gift returnGift = new DTO.Gift(insertedGift);
+            DTO.Gift returnGift = new DTO.Gift(domainGift);
 
             return Created($"api/gift/{returnGift.UserId}", returnGift);
         }
