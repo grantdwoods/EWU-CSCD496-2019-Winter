@@ -18,5 +18,11 @@ namespace SecretSanta.Api.Controllers
         {
             _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
+
+        [HttpPost("{user}")]
+        public ActionResult PostUser(DTO.User user)
+        {
+            return Created($"api/user/{user.Id}", null);
+        }
     }
 }
