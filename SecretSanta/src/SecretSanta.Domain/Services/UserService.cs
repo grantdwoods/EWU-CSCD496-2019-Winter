@@ -28,7 +28,8 @@ namespace SecretSanta.Domain.Services
 
         public void DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            DbContext.Users.Remove(user);
+            DbContext.SaveChanges();
         }
 
         public User UpdateUser(User user)
