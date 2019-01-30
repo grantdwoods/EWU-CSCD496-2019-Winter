@@ -21,7 +21,7 @@ namespace SecretSanta.Api.DTO
             Name = group.Name;
         }
 
-        public Domain.Models.Group DtoToDomain(DTO.Group group)
+        public static Domain.Models.Group DtoToDomain(DTO.Group group)
         {
             return new Domain.Models.Group { Name = group.Name, Id = group.Id };
         }
