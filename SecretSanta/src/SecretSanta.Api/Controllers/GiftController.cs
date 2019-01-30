@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Api.DTO;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 
@@ -27,7 +26,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
-            List<Domain.Models.Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
@@ -40,7 +39,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
+            Gift domainGift = DTO.Gift.DtoToDomain(gift);
             _GiftService.AddGiftToUser(userId, domainGift);
 
             DTO.Gift returnGift = new DTO.Gift(domainGift);
@@ -56,8 +55,8 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
-            Domain.Models.Gift updatedGift = _GiftService.UpdateGiftForUser(userId, domainGift);
+            Gift domainGift = DTO.Gift.DtoToDomain(gift);
+            Gift updatedGift = _GiftService.UpdateGiftForUser(userId, domainGift);
 
             if (GiftsAreEqual(updatedGift, gift))
             {
@@ -66,7 +65,7 @@ namespace SecretSanta.Api.Controllers
             return BadRequest();
         }
 
-        private bool GiftsAreEqual(Domain.Models.Gift updatedGift, DTO.Gift gift)
+        private bool GiftsAreEqual(Gift updatedGift, DTO.Gift gift)
         {
             return (updatedGift.Description == gift.Description &&
                     updatedGift.Id == gift.Id &&
@@ -83,7 +82,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Gift domainGift = DTO.Gift.DtoToDomain(gift);
+            Gift domainGift = DTO.Gift.DtoToDomain(gift);
             _GiftService.RemoveGift(domainGift);
             return Ok("Gift removed!");
         }
