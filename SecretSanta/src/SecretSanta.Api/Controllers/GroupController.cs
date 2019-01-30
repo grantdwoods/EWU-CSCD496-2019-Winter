@@ -18,5 +18,13 @@ namespace SecretSanta.Api.Controllers
             _GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
         }
 
+        [HttpPost("{group}")]
+        public ActionResult PostGroup(DTO.Group group)
+        {
+            Domain.Models.Group domainGroup = DTO.Group.DtoToDomain(group);
+            _GroupService.AddGroup(domainGroup);
+            DTO.Group returnedGroup = new DTO.Group(domainGroup);
+            return Created("", returnedGroup);
+        }
     }
 }
