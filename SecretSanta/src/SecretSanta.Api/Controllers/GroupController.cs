@@ -21,6 +21,11 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("{group}")]
         public ActionResult PostGroup(DTO.Group group)
         {
+            if(group == null)
+            {
+                return BadRequest();
+            }
+
             Domain.Models.Group domainGroup = DTO.Group.DtoToDomain(group);
             _GroupService.AddGroup(domainGroup);
             DTO.Group returnedGroup = new DTO.Group(domainGroup);

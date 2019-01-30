@@ -45,6 +45,11 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreNotEqual<int>(0, returnedGift.Id);
+        }
+
+        [TestMethod]
+        public void PostUserToGroup_ValidUser_Returns201WithUrlAndObject()
+        {
             
         }
     }

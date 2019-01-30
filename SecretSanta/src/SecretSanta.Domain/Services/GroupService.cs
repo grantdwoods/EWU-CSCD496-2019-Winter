@@ -35,7 +35,8 @@ namespace SecretSanta.Domain.Services
 
         public void DeleteGroup(Group group)
         {
-
+            DbContext.Groups.Remove(group);
+            DbContext.SaveChanges();
         }
     }
 }
