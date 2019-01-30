@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -26,7 +24,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            Domain.Models.Group domainGroup = DTO.Group.DtoToDomain(group);
+            Group domainGroup = DTO.Group.DtoToDomain(group);
             _GroupService.AddGroup(domainGroup);
             DTO.Group returnedGroup = new DTO.Group(domainGroup);
             return Created("", returnedGroup);
