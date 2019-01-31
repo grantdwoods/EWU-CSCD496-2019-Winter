@@ -20,7 +20,7 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public ActionResult<List<DTO.Gift>> GetGiftsForUser(int userId)
+        public ActionResult GetGiftsForUser(int userId)
         {
             if (userId <= 0)
             {
@@ -28,7 +28,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            return Ok(databaseUsers.Select(x => new DTO.Gift(x)).ToList());
         }
 
         [HttpPost("{userId, gift}")]

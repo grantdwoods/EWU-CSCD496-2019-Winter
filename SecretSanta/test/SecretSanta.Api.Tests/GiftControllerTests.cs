@@ -46,9 +46,10 @@ namespace SecretSanta.Api.Tests
             MockGiftService.Setup(x => x.GetGiftsForUser(4)).Returns(gifts).Verifiable();
             var controller = new GiftController(MockGiftService.Object);
 
-            ActionResult<List<DTO.Gift>> result = controller.GetGiftsForUser(4);
+            OkObjectResult result = (OkObjectResult) controller.GetGiftsForUser(4);
 
-            DTO.Gift resultGift = result.Value.Single();
+            List<DTO.Gift> resultGifts = (List<DTO.Gift>)result.Value;
+            DTO.Gift resultGift = resultGifts[0];
 
             Assert.AreEqual<int>(gift.UserId, resultGift.UserId);
             Assert.AreEqual<int>(gift.Id, resultGift.Id);

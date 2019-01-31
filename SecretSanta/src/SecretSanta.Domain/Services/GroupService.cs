@@ -58,8 +58,17 @@ namespace SecretSanta.Domain.Services
             GroupId = group.Id,
             UserId = user.Id};
 
-            group.GroupUsers.Add(groupUser);
-            user.GroupUsers.Add(groupUser);
+            if(group.GroupUsers != null && user.GroupUsers != null)
+            {
+                group.GroupUsers.Add(groupUser);
+                user.GroupUsers.Add(groupUser);
+            }
+            else
+            {
+                group.GroupUsers = new List<GroupUser> {groupUser};
+                user.GroupUsers = new List<GroupUser> { groupUser };
+            }
+
 
             DbContext.Groups.Update(group);
             DbContext.Users.Update(user);

@@ -2,6 +2,8 @@
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SecretSanta.Api.Controllers
 {
@@ -30,10 +32,19 @@ namespace SecretSanta.Api.Controllers
             return Created("", returnedGroup);
         }
 
-        [HttpPost("{groupId, userId}")]
-        public ActionResult PostUserToGroup(int v1, int v2)
+        [HttpPost("{groupId}, {userId}")]
+        public ActionResult PostUserToGroup(int groupId, int userId)
         {
-            return Created("", new DTO.Group());
+            Group returnedGroup = _GroupService.AddUserToGroup(groupId, userId);
+            return Created($"api/Group/{returnedGroup.Id}", new DTO.Group(returnedGroup));
+        }
+
+        [HttpGet("{groupId}")]
+        public ActionResult GetUsersInGroup(int groupId)
+        {
+            List<User> domainUsers =_GroupService.GetUsers(groupId);
+            var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
+            return Ok(dtoUsers);
         }
     }
 }

@@ -62,6 +62,26 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreEqual<int>(1, returnedGroup.Id);
+            Assert.AreEqual<string>($"api/Group/{returnedGroup.Id}", result.Location);
+            MockGroupService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetUsersInGroup_PositiveGroupId_Returns200WithList()
+        {
+            var users = new List<User>
+            {
+                new User { FirstName = "Grant" },
+                new User { LastName = "Woods" }
+            };
+
+            MockGroupService.Setup(x => x.GetUsers(1)).Returns(users).Verifiable();
+            var controller = new GroupController(MockGroupService.Object);
+
+            OkObjectResult results = (OkObjectResult)controller.GetUsersInGroup(1);
+
+            List<DTO.User> returnedUsers = (List<DTO.User>)results.Value;
+
             MockGroupService.VerifyAll();
         }
     }
