@@ -34,11 +34,12 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void PostGroup_ValidGroup_Returns201WithUrlAndObject()
         {
+            DTO.Group group = new DTO.Group { Name = "The Group" };
+
             MockGroupService.Setup(x => x.AddGroup(It.IsAny<Group>()))
                 .Callback((Group g) => g.Id = 1);
-
             var controller = new GroupController(MockGroupService.Object);
-            DTO.Group group = new DTO.Group { Name = "The Group"};
+            
             CreatedResult result = (CreatedResult)controller.PostGroup(group);
 
             DTO.Group returnedGift = (DTO.Group)result.Value;

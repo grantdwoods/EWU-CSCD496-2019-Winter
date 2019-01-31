@@ -35,19 +35,20 @@ namespace SecretSanta.Api.Tests
         {
             DTO.User user = new DTO.User {
                 FirstName = "Grant", LastName = "Woods"};
+
             MockUserService.Setup(x => x.AddUser(It.IsAny<User>()))
                 .Callback((User u) => { u.Id = 1; });
-
             var controller = new UserController(MockUserService.Object);
+
             var result = (CreatedResult)controller.PostUser(user);
 
             DTO.User returnedUser = (DTO.User)result.Value;
+
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreNotEqual<int>(0, returnedUser.Id);
             Assert.AreEqual<string>($"api/User/{returnedUser.Id}", result.Location);
             Assert.AreEqual<string>("Grant", returnedUser.FirstName);
             Assert.AreEqual<string>("Woods", returnedUser.LastName);
-
             MockUserService.VerifyAll();
         }
 
@@ -55,8 +56,8 @@ namespace SecretSanta.Api.Tests
         public void PostUser_NullUser_Returns400()
         {
             MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
-
             var controller = new UserController(MockUserService.Object);
+
             var result = (BadRequestResult)controller.PostUser(null);
 
             Assert.AreEqual<int?>(400, result.StatusCode);
@@ -66,13 +67,14 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void PutUser_ValidUser_Rurns200()
         {
-            MockUserService.Setup(x => x.UpdateUser(It.IsAny<User>()));
             DTO.User user = new DTO.User{
                 FirstName = "Grant",
                 LastName = "Woods"
             };
 
+            MockUserService.Setup(x => x.UpdateUser(It.IsAny<User>()));
             var controller = new UserController(MockUserService.Object);
+
             OkObjectResult result = (OkObjectResult)controller.PutUser(user);
 
             Assert.AreEqual<int?>(200, result.StatusCode);
@@ -83,8 +85,8 @@ namespace SecretSanta.Api.Tests
         public void PutUser_NullUser_Returns400()
         {
             MockUserService.Setup(x => x.UpdateUser(It.IsAny<User>())).Verifiable();
-
             var controller = new UserController(MockUserService.Object);
+
             BadRequestResult result = (BadRequestResult)controller.PutUser(null);
 
             Assert.AreEqual<int?>(400, result.StatusCode);
@@ -94,10 +96,11 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void DeleteUser_Retuns200()
         {
-            MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
             DTO.User user = Mocker.CreateInstance<DTO.User>();
 
+            MockUserService.Setup(x => x.DeleteUser(It.IsAny<User>())).Verifiable();
             var controller = new UserController(MockUserService.Object);
+
             OkResult result = (OkResult)controller.DeleteUser(user);
 
             Assert.AreEqual<int?>(200, result.StatusCode);

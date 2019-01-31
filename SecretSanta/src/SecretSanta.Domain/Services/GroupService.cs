@@ -41,5 +41,10 @@ namespace SecretSanta.Domain.Services
                 .Select(x => x.User)
                 .ToList();
         }
+
+        public void DeleteGroup(Group group)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
