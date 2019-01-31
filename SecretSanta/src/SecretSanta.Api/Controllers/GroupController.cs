@@ -29,5 +29,11 @@ namespace SecretSanta.Api.Controllers
             DTO.Group returnedGroup = new DTO.Group(domainGroup);
             return Created("", returnedGroup);
         }
+
+        [HttpPost("{groupId, userId}")]
+        public ActionResult PostUserToGroup(int v1, int v2)
+        {
+            return Created("", new DTO.Group());
+        }
     }
 }

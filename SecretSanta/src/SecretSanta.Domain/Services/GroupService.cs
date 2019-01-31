@@ -42,9 +42,31 @@ namespace SecretSanta.Domain.Services
                 .ToList();
         }
 
-        public void DeleteGroup(Group group)
+        public void DeleteGroup(Group @group)
         {
-            throw new NotImplementedException();
+            DbContext.Remove(@group);
+            DbContext.SaveChanges();
+        }
+
+        public Group AddUserToGroup(int groupId, int userId)
+        {
+            Group group = DbContext.Groups.Single(x => x.Id == groupId);
+            User user = DbContext.Users.Single(x => x.Id == userId);
+            GroupUser groupUser = new GroupUser{
+            User = user,
+            Group = group,
+            GroupId = group.Id,
+            UserId = user.Id};
+
+            group.GroupUsers.Add(groupUser);
+            user.GroupUsers.Add(groupUser);
+
+            DbContext.Groups.Update(group);
+            DbContext.Users.Update(user);
+
+            DbContext.SaveChanges();
+
+            return group;
         }
     }
 }

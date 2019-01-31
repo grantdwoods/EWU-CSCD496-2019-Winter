@@ -42,16 +42,27 @@ namespace SecretSanta.Api.Tests
             
             CreatedResult result = (CreatedResult)controller.PostGroup(group);
 
-            DTO.Group returnedGift = (DTO.Group)result.Value;
+            DTO.Group returnedGroup = (DTO.Group)result.Value;
 
             Assert.AreEqual<int?>(201, result.StatusCode);
-            Assert.AreNotEqual<int>(0, returnedGift.Id);
+            Assert.AreNotEqual<int>(0, returnedGroup.Id);
+            MockGroupService.Verify();
         }
 
         [TestMethod]
         public void PostUserToGroup_ValidUser_Returns201WithUrlAndObject()
         {
-            
+            MockGroupService.Setup(x => x.AddUserToGroup(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new Group { Id = 1}).Verifiable();
+            var controller = new GroupController(MockGroupService.Object);
+
+            CreatedResult result = (CreatedResult)controller.PostUserToGroup(1,1);
+
+            DTO.Group returnedGroup = (DTO.Group)result.Value;
+
+            Assert.AreEqual<int?>(201, result.StatusCode);
+            Assert.AreEqual<int>(1, returnedGroup.Id);
+            MockGroupService.VerifyAll();
         }
     }
 }
