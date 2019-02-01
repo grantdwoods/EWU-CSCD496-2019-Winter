@@ -44,7 +44,17 @@ namespace SecretSanta.Api.Controllers
         {
             List<User> domainUsers =_GroupService.GetUsers(groupId);
             var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
+
             return Ok(dtoUsers);
+        }
+
+        [HttpGet("groups/")]
+        public ActionResult GetAllGroups()
+        {
+            List<Group> domainGroups = _GroupService.FetchAll();
+            var dtoGroups = domainGroups.Select(x => new DTO.Group(x)).ToList();
+
+            return Ok(dtoGroups);
         }
 
         [HttpPut("{group}")]

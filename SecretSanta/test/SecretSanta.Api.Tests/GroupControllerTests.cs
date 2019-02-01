@@ -25,13 +25,6 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GiftController_RequiresGiftService()
-        {
-            new GroupController(null);
-        }
-
-        [TestMethod]
         public void PostGroup_ValidGroup_Returns201WithUrlAndObject()
         {
             DTO.Group group = new DTO.Group { Name = "The Group" };
@@ -40,13 +33,24 @@ namespace SecretSanta.Api.Tests
                 .Callback((Group g) => g.Id = 1);
             var controller = new GroupController(MockGroupService.Object);
             
-            CreatedResult result = (CreatedResult)controller.PostGroup(group);
+            var result = (CreatedResult)controller.PostGroup(group);
 
-            DTO.Group returnedGroup = (DTO.Group)result.Value;
+            var returnedGroup = (DTO.Group)result.Value;
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreNotEqual<int>(0, returnedGroup.Id);
             MockGroupService.Verify();
+        }
+
+        [TestMethod]
+        public void PostGroup_NullGroup_Returns400()
+        {
+            var controller = new GroupController(MockGroupService.Object);
+
+            BadRequestResult result = (BadRequestResult)controller.PostGroup(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockGroupService.Verify(x => x.AddGroup(It.IsAny<Group>()), Times.Never);
         }
 
         [TestMethod]
@@ -58,7 +62,7 @@ namespace SecretSanta.Api.Tests
 
             CreatedResult result = (CreatedResult)controller.PostUserToGroup(1,1);
 
-            DTO.Group returnedGroup = (DTO.Group)result.Value;
+            var returnedGroup = (DTO.Group)result.Value;
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreEqual<int>(1, returnedGroup.Id);
@@ -80,7 +84,7 @@ namespace SecretSanta.Api.Tests
 
             OkObjectResult results = (OkObjectResult)controller.GetUsersInGroup(1);
 
-            List<DTO.User> returnedUsers = (List<DTO.User>)results.Value;
+            var returnedUsers = (List<DTO.User>)results.Value;
 
             MockGroupService.VerifyAll();
         }
@@ -89,14 +93,14 @@ namespace SecretSanta.Api.Tests
         public void PutGroup_ChangesGroupName_Returns200WithUpdatedObject()
         {
             DTO.Group group = new DTO.Group { Name = "Testing", Id = 1 };
+
             MockGroupService.Setup(x => x.UpdateGroup(It.IsAny<Group>()))
                 .Callback((Group g) => { g.Name = "UPDATED"; });
-
             var controller = new GroupController(MockGroupService.Object);
 
             OkObjectResult results = (OkObjectResult) controller.PutGroup(group);
 
-            DTO.Group updatedGroup = (DTO.Group)results.Value;
+            var updatedGroup = (DTO.Group)results.Value;
 
             Assert.AreEqual<int?>(200, results.StatusCode);
             Assert.AreEqual<string>("UPDATED", updatedGroup.Name);
@@ -126,7 +130,13 @@ namespace SecretSanta.Api.Tests
             MockGroupService.Setup(x => x.FetchAll()).Returns(groups).Verifiable();
 
             var controller = new GroupController(MockGroupService.Object);
-           
+            var result = (OkObjectResult)controller.GetAllGroups();
+
+            var returnedGroups = (List<DTO.Group>)result.Value;
+
+            Assert.AreEqual<string>("Group 1", returnedGroups[0].Name);
+            Assert.AreEqual<string>("Group 2", returnedGroups[1].Name);
+            MockGroupService.VerifyAll();
         }
     }
 }
