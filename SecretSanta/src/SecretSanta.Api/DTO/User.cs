@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace SecretSanta.Api.DTO
 {
     public class User
@@ -17,7 +13,10 @@ namespace SecretSanta.Api.DTO
         }
         public User(Domain.Models.User user)
         {
-            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
             Id = user.Id;
             FirstName = user.FirstName;

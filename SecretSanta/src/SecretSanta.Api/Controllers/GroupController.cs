@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,6 +20,11 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{groupId}")]
         public ActionResult GetUsersInGroup(int groupId)
         {
+            if(groupId <= 0)
+            {
+                return NotFound();
+            }
+
             List<User> domainUsers = _GroupService.GetUsers(groupId);
             var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
 
@@ -65,6 +69,11 @@ namespace SecretSanta.Api.Controllers
         [HttpPut("{group}")]
         public ActionResult PutGroup(DTO.Group group)
         {
+            if(group == null)
+            {
+                return BadRequest();
+            }
+
             Group domainGift = DTO.Group.DtoToDomain(group);
             _GroupService.UpdateGroup(domainGift);
             return Ok(new DTO.Group(domainGift));
@@ -73,6 +82,11 @@ namespace SecretSanta.Api.Controllers
         [HttpDelete("{group}")]
         public ActionResult DeleteGroup(DTO.Group group)
         {
+            if(group == null)
+            {
+                return BadRequest();
+            }
+
             Group domainGroup = DTO.Group.DtoToDomain(group);
             _GroupService.DeleteGroup(domainGroup);
 

@@ -1,10 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Domain.Models;
-using System.Collections.Generic;
-using System.Linq;
 using Moq.AutoMock;
 using Moq;
 using SecretSanta.Domain.Services;
@@ -24,7 +21,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void AddUser_ValidInput_Returns201WithUrlAndObjectCreated()
+        public void PostUser_ValidInput_Returns201WithUrlAndObjectCreated()
         {
             DTO.User user = new DTO.User {
                 FirstName = "Grant", LastName = "Woods"};

@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Domain.Models;
 using System.Collections.Generic;
-using System.Linq;
 using Moq.AutoMock;
 using Moq;
 using SecretSanta.Domain.Services;
@@ -39,7 +37,7 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(201, result.StatusCode);
             Assert.AreNotEqual<int>(0, returnedGroup.Id);
-            MockGroupService.Verify();
+            MockGroupService.VerifyAll();
         }
 
         [TestMethod]
@@ -87,7 +85,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetUsersInGroup_GroupIdPositive_Returns200WithList()
+        public void GetUsersInGroup_GroupIdPositive_Returns200WithListofUsers()
         {
             var users = new List<User>
             {
@@ -103,6 +101,19 @@ namespace SecretSanta.Api.Tests
             var returnedUsers = (List<DTO.User>)results.Value;
 
             MockGroupService.VerifyAll();
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-1)]
+        public void GetUsersInGroup_GroupIdLessthanOne_Return404(int groupId)
+        {
+            var controller = new GroupController(MockGroupService.Object);
+
+            var result = (NotFoundResult)controller.GetUsersInGroup(groupId);
+
+            Assert.AreEqual<int?>(404, result.StatusCode);
+            MockGroupService.Verify(x => x.GetUsers(It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -125,6 +136,17 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
+        public void PutGroup_NullGroup_Returns400()
+        {
+            var controller = new GroupController(MockGroupService.Object);
+
+            var result = (BadRequestResult)controller.PutGroup(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockGroupService.Verify(x => x.UpdateGroup(It.IsAny<Group>()), Times.Never);
+        }
+
+        [TestMethod]
         public void DeleteGroup_Returns200WithMessage()
         {
             DTO.Group group = Mocker.CreateInstance<DTO.Group>();
@@ -137,7 +159,18 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetAllGroups()
+        public void DeleteGroup_NullGroup_Returns400()
+        {
+            var controller = new GroupController(MockGroupService.Object);
+
+            var result = (BadRequestResult)controller.DeleteGroup(null);
+
+            Assert.AreEqual<int?>(400, result.StatusCode);
+            MockGroupService.Verify(x => x.DeleteGroup(It.IsAny<Group>()), Times.Never);
+        }
+
+        [TestMethod]
+        public void GetAllGroups_Returns200WithListOfGroups()
         {
             List<Group> groups = new List<Group>
             { new Group { Name = "Group 1" },

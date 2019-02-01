@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 

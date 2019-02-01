@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace SecretSanta.Api.DTO
 {
     public class Group
@@ -17,6 +13,11 @@ namespace SecretSanta.Api.DTO
         
         public Group(Domain.Models.Group group)
         {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
             Id = group.Id;
             Name = group.Name;
         }

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Api.Controllers;
@@ -54,14 +53,16 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetGiftForUser_RequiresPositiveUserId()
+        [DataRow(0)]
+        [DataRow(-1)]
+        public void GetGiftForUser_UserIdLessThanOne_Returns404(int userId)
         {
             var controller = new GiftController(MockGiftService.Object);
 
-            var result = (NotFoundResult)controller.GetGiftsForUser(-1);
+            var result = (NotFoundResult)controller.GetGiftsForUser(userId);
 
             Assert.AreEqual<int?>(404, result.StatusCode);
-            MockGiftService.Verify(x => x.GetGiftsForUser(-1), Times.Never());
+            MockGiftService.Verify(x => x.GetGiftsForUser(userId), Times.Never());
         }
 
         [TestMethod]
@@ -96,17 +97,19 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void PostGiftToUser_UserIDlessThanOrEqualToZero_Returns400()
+        [DataRow(0)]
+        [DataRow(-1)]
+        public void PostGiftToUser_UserIDLessThanOne_Returns400(int userId)
         {
             var gift = Mocker.CreateInstance<DTO.Gift>();
 
             var controller = new GiftController(MockGiftService.Object);
       
-            var result = (BadRequestResult)controller.PostGiftToUser(0, gift);
+            var result = (BadRequestResult)controller.PostGiftToUser(userId, gift);
 
             Assert.AreEqual<int?>(400, result.StatusCode);
             MockGiftService
-                .Verify(x => x.AddGiftToUser(It.IsAny<int>(), It.IsAny<Gift>()), Times.Never);
+                .Verify(x => x.AddGiftToUser(userId , It.IsAny<Gift>()), Times.Never);
         }
 
         [TestMethod]
@@ -135,6 +138,21 @@ namespace SecretSanta.Api.Tests
 
             Assert.AreEqual<int?>(400, results.StatusCode);
             MockGiftService.Verify(x => x.UpdateGiftForUser(2, null), Times.Never);
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-1)]
+        public void PutGiftForUser_UserIdLessThanOne_Returns400(int userId)
+        {
+            DTO.Gift gift = Mocker.CreateInstance<DTO.Gift>();
+
+            var controller = new GiftController(MockGiftService.Object);
+
+            var results = (BadRequestResult)controller.PutUserGift(userId, gift);
+
+            Assert.AreEqual<int?>(400, results.StatusCode);
+            MockGiftService.Verify(x => x.UpdateGiftForUser(userId, It.IsAny<Gift>()), Times.Never);
         }
 
         [TestMethod]
