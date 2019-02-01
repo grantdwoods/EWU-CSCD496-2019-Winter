@@ -24,6 +24,15 @@ namespace SecretSanta.Api.DTO
             LastName = user.LastName;
         }
 
-        
+        public static Domain.Models.User DtoToDomain(User user)
+        {
+            Domain.Models.User domainGift = new Domain.Models.User
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+            return domainGift;
+        }
     }
 }

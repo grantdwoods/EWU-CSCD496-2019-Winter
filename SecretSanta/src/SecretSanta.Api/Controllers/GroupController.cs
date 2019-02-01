@@ -15,7 +15,25 @@ namespace SecretSanta.Api.Controllers
 
         public GroupController(IGroupService groupService)
         {
-            _GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
+            _GroupService = groupService;
+        }
+
+        [HttpGet("{groupId}")]
+        public ActionResult GetUsersInGroup(int groupId)
+        {
+            List<User> domainUsers = _GroupService.GetUsers(groupId);
+            var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
+
+            return Ok(dtoUsers);
+        }
+
+        [HttpGet("groups/")]
+        public ActionResult GetAllGroups()
+        {
+            List<Group> domainGroups = _GroupService.FetchAll();
+            var dtoGroups = domainGroups.Select(x => new DTO.Group(x)).ToList();
+
+            return Ok(dtoGroups);
         }
 
         [HttpPost("{group}")]
@@ -35,26 +53,13 @@ namespace SecretSanta.Api.Controllers
         [HttpPost("userGroup/{groupId, userId}")]
         public ActionResult PostUserToGroup(int groupId, int userId)
         {
+            if(groupId <=0 || userId <= 0)
+            {
+                return BadRequest();
+            }
+
             Group returnedGroup = _GroupService.AddUserToGroup(groupId, userId);
             return Created($"api/Group/{returnedGroup.Id}", new DTO.Group(returnedGroup));
-        }
-
-        [HttpGet("{groupId}")]
-        public ActionResult GetUsersInGroup(int groupId)
-        {
-            List<User> domainUsers =_GroupService.GetUsers(groupId);
-            var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
-
-            return Ok(dtoUsers);
-        }
-
-        [HttpGet("groups/")]
-        public ActionResult GetAllGroups()
-        {
-            List<Group> domainGroups = _GroupService.FetchAll();
-            var dtoGroups = domainGroups.Select(x => new DTO.Group(x)).ToList();
-
-            return Ok(dtoGroups);
         }
 
         [HttpPut("{group}")]

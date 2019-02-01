@@ -13,7 +13,7 @@ namespace SecretSanta.Api.Controllers
 
         public UserController(IUserService userService)
         {
-            _UserService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _UserService = userService;
         }
 
         [HttpPost("{user}")]
@@ -24,7 +24,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            User domainUser = DtoToDomain(user);
+            User domainUser = DTO.User.DtoToDomain(user);
             _UserService.AddUser(domainUser);
             DTO.User returnUser = new DTO.User(domainUser);
 
@@ -39,20 +39,11 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            User domainUser = DtoToDomain(user);
+            User domainUser = DTO.User.DtoToDomain(user);
             _UserService.UpdateUser(domainUser);
             return Ok("User updated!");
         }
-        private User DtoToDomain(DTO.User user)
-        {
-            User domainGift = new User
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
-            return domainGift;
-        }
+
         [HttpDelete("{user}")]
         public ActionResult DeleteUser(DTO.User user)
         {
@@ -61,7 +52,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            User domainUser = DtoToDomain(user);
+            User domainUser = DTO.User.DtoToDomain(user);
             _UserService.DeleteUser(domainUser);
 
             return Ok();

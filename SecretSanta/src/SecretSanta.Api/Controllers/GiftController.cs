@@ -15,10 +15,9 @@ namespace SecretSanta.Api.Controllers
 
         public GiftController(IGiftService giftService)
         {
-            _GiftService = giftService ?? throw new ArgumentNullException(nameof(giftService));
+            _GiftService = giftService;
         }
 
-        // GET api/Gift/5
         [HttpGet("{userId}")]
         public ActionResult GetGiftsForUser(int userId)
         {
@@ -29,12 +28,6 @@ namespace SecretSanta.Api.Controllers
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return Ok(databaseUsers.Select(x => new DTO.Gift(x)).ToList());
-        }
-
-        [HttpGet("/groups")]
-        public ActionResult GetAllGroups()
-        {
-            return null;
         }
 
         [HttpPost("{userId, gift}")]
@@ -71,15 +64,6 @@ namespace SecretSanta.Api.Controllers
             return BadRequest();
         }
 
-        private bool GiftsAreEqual(Gift updatedGift, DTO.Gift gift)
-        {
-            return (updatedGift.Description == gift.Description &&
-                    updatedGift.Id == gift.Id &&
-                    updatedGift.OrderOfImportance == gift.OrderOfImportance &&
-                    updatedGift.Url == gift.Url &&
-                    updatedGift.UserId == gift.UserId);
-        }
-
         [HttpDelete("{gift}")]
         public ActionResult DeleteGift(DTO.Gift gift)
         {
@@ -91,6 +75,15 @@ namespace SecretSanta.Api.Controllers
             Gift domainGift = DTO.Gift.DtoToDomain(gift);
             _GiftService.RemoveGift(domainGift);
             return Ok("Gift removed!");
+        }
+
+        private bool GiftsAreEqual(Gift updatedGift, DTO.Gift gift)
+        {
+            return (updatedGift.Description == gift.Description &&
+                    updatedGift.Id == gift.Id &&
+                    updatedGift.OrderOfImportance == gift.OrderOfImportance &&
+                    updatedGift.Url == gift.Url &&
+                    updatedGift.UserId == gift.UserId);
         }
     }
 }
