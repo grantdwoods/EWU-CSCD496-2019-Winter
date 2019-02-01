@@ -84,5 +84,49 @@ namespace SecretSanta.Api.Tests
 
             MockGroupService.VerifyAll();
         }
+
+        [TestMethod]
+        public void PutGroup_ChangesGroupName_Returns200WithUpdatedObject()
+        {
+            DTO.Group group = new DTO.Group { Name = "Testing", Id = 1 };
+            MockGroupService.Setup(x => x.UpdateGroup(It.IsAny<Group>()))
+                .Callback((Group g) => { g.Name = "UPDATED"; });
+
+            var controller = new GroupController(MockGroupService.Object);
+
+            OkObjectResult results = (OkObjectResult) controller.PutGroup(group);
+
+            DTO.Group updatedGroup = (DTO.Group)results.Value;
+
+            Assert.AreEqual<int?>(200, results.StatusCode);
+            Assert.AreEqual<string>("UPDATED", updatedGroup.Name);
+            Assert.AreEqual<int>(1, updatedGroup.Id);
+            MockGroupService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void DeleteGroup_Returns200WithMessage()
+        {
+            DTO.Group group = Mocker.CreateInstance<DTO.Group>();
+            MockGroupService.Setup(x => x.DeleteGroup(It.IsAny<Group>()));
+            var controller = new GroupController(MockGroupService.Object);
+            var result = (OkObjectResult) controller.DeleteGroup(group);
+
+            Assert.AreEqual<int?>(200, result.StatusCode);
+            MockGroupService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void GetAllGroups()
+        {
+            List<Group> groups = new List<Group>
+            { new Group { Name = "Group 1" },
+              new Group { Name = "Group 2" } };
+
+            MockGroupService.Setup(x => x.FetchAll()).Returns(groups).Verifiable();
+
+            var controller = new GroupController(MockGroupService.Object);
+           
+        }
     }
 }

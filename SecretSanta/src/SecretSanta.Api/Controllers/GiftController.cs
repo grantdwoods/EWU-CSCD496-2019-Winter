@@ -31,6 +31,12 @@ namespace SecretSanta.Api.Controllers
             return Ok(databaseUsers.Select(x => new DTO.Gift(x)).ToList());
         }
 
+        [HttpGet("/groups")]
+        public ActionResult GetAllGroups()
+        {
+            return null;
+        }
+
         [HttpPost("{userId, gift}")]
         public ActionResult PostGiftToUser(int userId, DTO.Gift gift)
         {

@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
             return Created("", returnedGroup);
         }
 
-        [HttpPost("{groupId}, {userId}")]
+        [HttpPost("userGroup/{groupId, userId}")]
         public ActionResult PostUserToGroup(int groupId, int userId)
         {
             Group returnedGroup = _GroupService.AddUserToGroup(groupId, userId);
@@ -45,6 +45,23 @@ namespace SecretSanta.Api.Controllers
             List<User> domainUsers =_GroupService.GetUsers(groupId);
             var dtoUsers = domainUsers.Select(x => new DTO.User(x)).ToList();
             return Ok(dtoUsers);
+        }
+
+        [HttpPut("{group}")]
+        public ActionResult PutGroup(DTO.Group group)
+        {
+            Group domainGift = DTO.Group.DtoToDomain(group);
+            _GroupService.UpdateGroup(domainGift);
+            return Ok(new DTO.Group(domainGift));
+        }
+
+        [HttpDelete("{group}")]
+        public ActionResult DeleteGroup(DTO.Group group)
+        {
+            Group domainGroup = DTO.Group.DtoToDomain(group);
+            _GroupService.DeleteGroup(domainGroup);
+
+            return Ok("Group removed.");
         }
     }
 }

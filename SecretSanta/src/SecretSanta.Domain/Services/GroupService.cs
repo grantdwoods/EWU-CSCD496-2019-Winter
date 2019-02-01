@@ -69,7 +69,6 @@ namespace SecretSanta.Domain.Services
                 user.GroupUsers = new List<GroupUser> { groupUser };
             }
 
-
             DbContext.Groups.Update(group);
             DbContext.Users.Update(user);
 
