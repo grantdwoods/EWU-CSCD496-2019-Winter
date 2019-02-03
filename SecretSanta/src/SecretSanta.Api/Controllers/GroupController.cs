@@ -1,9 +1,11 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
+using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,20 +13,25 @@ using SecretSanta.Domain.Services.Interfaces;
 namespace SecretSanta.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
+        private IMapper Mapper { get; }
 
-        public GroupController(IGroupService groupService)
+        public GroupController(IGroupService groupService, IMapper mapper)
         {
-            GroupService = groupService ?? throw new ArgumentNullException(nameof(groupService));
+            GroupService = groupService;
+            Mapper = mapper;
         }
 
         // GET api/group
         [HttpGet]
         public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
         {
-            return new ActionResult<IEnumerable<GroupViewModel>>(GroupService.FetchAll().Select(x => GroupViewModel.ToViewModel(x)));
+            List<Group> groups = GroupService.FetchAll();
+            List<GroupViewModel> groupsView = Mapper.Map <List<GroupViewModel>>(groups);
+            return groupsView;
         }
 
         // POST api/group

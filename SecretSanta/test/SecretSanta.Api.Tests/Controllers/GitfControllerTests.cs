@@ -6,7 +6,8 @@ using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using AutoMapper;
+using Moq;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -31,7 +32,7 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, new Mock<IMapper>().Object);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
 
@@ -48,7 +49,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public void GetGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            var controller = new GiftController(testService, new Mock<IMapper>().Object);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
 

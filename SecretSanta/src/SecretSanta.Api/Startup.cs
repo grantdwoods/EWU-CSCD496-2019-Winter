@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace SecretSanta.Api
 {
     public class Startup
@@ -27,6 +30,9 @@ namespace SecretSanta.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IGiftService, GiftService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGroupService, GroupService>();
+
 
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
@@ -40,6 +46,19 @@ namespace SecretSanta.Api
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+
+            var mapperConf = new MapperConfiguration(cfg => {
+                cfg.ShouldMapProperty = GroupUser => false;
+                cfg.ShouldMapProperty = Gifts => false;
+                cfg.ShouldMapProperty = User => false;
+
+                cfg.AddProfile(new UserMapperProfile());
+                cfg.AddProfile(new GiftMapperProfile());
+                cfg.AddProfile(new GroupMapperProfile());
+            });
+            var mapper = mapperConf.CreateMapper();
+            services.AddSingleton(mapper);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
