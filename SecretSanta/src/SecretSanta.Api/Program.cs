@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-
+using SecretSanta.Api.Models;
 
 namespace SecretSanta.Api
 {
@@ -8,6 +8,7 @@ namespace SecretSanta.Api
     {
         public static void Main(string[] args)
         {
+            CurrentDirectoryHelpers.SetCurrentDirectory();
             CreateWebHostBuilder(args).Build().Run();
         }
 

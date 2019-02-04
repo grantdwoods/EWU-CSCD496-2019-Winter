@@ -33,12 +33,9 @@ namespace SecretSanta.Api
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
 
-
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
-                builder.UseSqlite(connection);
+                builder.UseSqlite(Configuration.GetConnectionString("DefaultSqliteConnection"));
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
