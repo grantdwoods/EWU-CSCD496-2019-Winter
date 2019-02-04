@@ -8,12 +8,21 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Moq;
+using SecretSanta.Api.Models;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests
     {
+        private IMapper _Mapper { get; set; }
+
+        [TestInitialize]
+        public void SetMapper()
+        {
+            _Mapper = Mapper.Instance;
+        }
+
         [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
@@ -32,7 +41,7 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService, new Mock<IMapper>().Object);
+            var controller = new GiftController(testService, _Mapper);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
 
@@ -49,7 +58,7 @@ namespace SecretSanta.Api.Tests.Controllers
         public void GetGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
-            var controller = new GiftController(testService, new Mock<IMapper>().Object);
+            var controller = new GiftController(testService, _Mapper);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
 

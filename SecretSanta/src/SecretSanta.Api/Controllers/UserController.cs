@@ -17,11 +17,11 @@ namespace SecretSanta.Api.Controllers
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; }
-        private IMapper Mapper { get; }
+        private IMapper _Mapper { get; }
 
         public UserController(IUserService userService, IMapper mapper)
         {
-            Mapper = mapper;
+            _Mapper = mapper;
             UserService = userService;
         }
 
@@ -33,10 +33,8 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            var domainUser = Mapper.Map<User>(userInputViewModel);
-            var persistedUser = UserService.AddUser(domainUser);
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return Ok(_Mapper.Map<UserViewModel>(UserService.AddUser(_Mapper.Map<User>(userInputViewModel))));
         }
 
         // PUT api/<controller>/5
@@ -59,7 +57,7 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(UserViewModel.ToViewModel(persistedUser));
+            return Ok(_Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // DELETE api/<controller>/5

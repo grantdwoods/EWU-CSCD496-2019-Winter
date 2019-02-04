@@ -47,7 +47,8 @@ namespace SecretSanta.Api
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            var mapperConf = new MapperConfiguration(cfg => {
+            Mapper.Initialize(cfg =>
+            {
                 cfg.ShouldMapProperty = GroupUser => false;
                 cfg.ShouldMapProperty = Gifts => false;
                 cfg.ShouldMapProperty = User => false;
@@ -56,9 +57,8 @@ namespace SecretSanta.Api
                 cfg.AddProfile(new GiftMapperProfile());
                 cfg.AddProfile(new GroupMapperProfile());
             });
-            var mapper = mapperConf.CreateMapper();
-            services.AddSingleton(mapper);
 
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

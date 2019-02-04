@@ -15,11 +15,11 @@ namespace SecretSanta.Api.Controllers
     public class GiftController : ControllerBase
     {
         private IGiftService GiftService { get; }
-        private IMapper Mapper { get; }
+        private IMapper _Mapper { get; }
 
         public GiftController(IGiftService giftService, IMapper mapper)
         {
-            Mapper = mapper;
+            _Mapper = mapper;
             GiftService = giftService;
         }
 
@@ -31,10 +31,8 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
-            List<Gift> userGifts = GiftService.GetGiftsForUser(userId);
-            var users = Mapper.Map <List<GiftViewModel>>(userGifts);
 
-            return userGifts.Select(x => GiftViewModel.ToViewModel(x)).ToList();
+            return _Mapper.Map <List<GiftViewModel>>(GiftService.GetGiftsForUser(userId));
         }
     }
 }

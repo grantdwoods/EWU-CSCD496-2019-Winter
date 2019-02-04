@@ -17,21 +17,19 @@ namespace SecretSanta.Api.Controllers
     public class GroupController : ControllerBase
     {
         private IGroupService GroupService { get; }
-        private IMapper Mapper { get; }
+        private IMapper _Mapper { get; }
 
         public GroupController(IGroupService groupService, IMapper mapper)
         {
             GroupService = groupService;
-            Mapper = mapper;
+            _Mapper = mapper;
         }
 
         // GET api/group
         [HttpGet]
         public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
         {
-            List<Group> groups = GroupService.FetchAll();
-            List<GroupViewModel> groupsView = Mapper.Map <List<GroupViewModel>>(groups);
-            return groupsView;
+            return _Mapper.Map <List<GroupViewModel>>(GroupService.FetchAll());
         }
 
         // POST api/group
@@ -43,7 +41,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            return GroupViewModel.ToViewModel(GroupService.AddGroup(GroupInputViewModel.ToModel(viewModel)));
+            return _Mapper.Map<GroupViewModel>(GroupService.AddGroup(_Mapper.Map<Group>(viewModel)));
         }
 
         // PUT api/group/5
@@ -62,7 +60,7 @@ namespace SecretSanta.Api.Controllers
 
             fetchedGroup.Name = viewModel.Name;
 
-            return GroupViewModel.ToViewModel(GroupService.UpdateGroup(fetchedGroup));
+            return _Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup));
         }
 
         [HttpPut("{groupId}/{userid}")]
