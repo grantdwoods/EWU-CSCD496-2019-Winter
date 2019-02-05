@@ -49,7 +49,7 @@ namespace SecretSanta.Api
                 cfg.ShouldMapProperty = GroupUser => false;
                 cfg.ShouldMapProperty = Gifts => false;
                 cfg.ShouldMapProperty = User => false;
-
+                
                 cfg.AddProfile(new UserMapperProfile());
                 cfg.AddProfile(new GiftMapperProfile());
                 cfg.AddProfile(new GroupMapperProfile());

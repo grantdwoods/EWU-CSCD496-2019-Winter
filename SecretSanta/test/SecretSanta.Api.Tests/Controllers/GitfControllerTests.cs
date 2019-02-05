@@ -15,6 +15,11 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class GiftControllerTests
     {
+        [AssemblyInitialize]
+        static public void InitMapper(TestContext testContext)
+        {
+            Mapper.Initialize(cfg => cfg.AddProfile(new GroupMapperProfile()));
+        }
         private IMapper _Mapper { get; set; }
 
         [TestInitialize]

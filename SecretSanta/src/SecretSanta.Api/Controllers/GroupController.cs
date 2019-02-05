@@ -34,19 +34,21 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/group
         [HttpPost]
-        public ActionResult<GroupViewModel> CreateGroup(GroupInputViewModel viewModel)
+        public ActionResult<GroupViewModel> PostGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
 
+            var group = GroupService.AddGroup(_Mapper.Map<Group>(viewModel));
+
             return _Mapper.Map<GroupViewModel>(GroupService.AddGroup(_Mapper.Map<Group>(viewModel)));
         }
 
         // PUT api/group/5
         [HttpPut("{id}")]
-        public ActionResult<GroupViewModel> UpdateGroup(int id, GroupInputViewModel viewModel)
+        public ActionResult<GroupViewModel> PutGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -60,27 +62,23 @@ namespace SecretSanta.Api.Controllers
 
             fetchedGroup.Name = viewModel.Name;
 
-            return _Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup));
+            return NoContent();//_Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup));
         }
 
         [HttpPut("{groupId}/{userid}")]
-        public ActionResult AddUserToGroup(int groupId, int userId)
+        public ActionResult PutUserToGroup(int groupId, int userId)
         {
-            if (groupId <= 0)
+            if (groupId <= 0 || userId <=0)
+            {
+                return NotFound();
+            }
+
+            if (!GroupService.AddUserToGroup(groupId, userId))
             {
                 return BadRequest();
             }
 
-            if (userId <= 0)
-            {
-                return BadRequest();
-            }
-
-            if (GroupService.AddUserToGroup(groupId, userId))
-            {
-                return Ok();
-            }
-            return NotFound();
+            return NoContent();
         }
 
         // DELETE api/group/5

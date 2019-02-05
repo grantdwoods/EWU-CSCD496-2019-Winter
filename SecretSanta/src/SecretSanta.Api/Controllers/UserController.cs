@@ -34,7 +34,8 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            return Ok(_Mapper.Map<UserViewModel>(UserService.AddUser(_Mapper.Map<User>(userInputViewModel))));
+            return Created("", 
+                _Mapper.Map<UserViewModel>(UserService.AddUser(_Mapper.Map<User>(userInputViewModel))));
         }
 
         // PUT api/<controller>/5
@@ -52,12 +53,11 @@ namespace SecretSanta.Api.Controllers
                 return NotFound();
             }
 
-            foundUser.FirstName = userViewModel.FirstName;
-            foundUser.LastName = userViewModel.LastName;
+            _Mapper.Map(userViewModel, foundUser);
 
             var persistedUser = UserService.UpdateUser(foundUser);
 
-            return Ok(_Mapper.Map<UserViewModel>(persistedUser));
+            return NoContent();
         }
 
         // DELETE api/<controller>/5
