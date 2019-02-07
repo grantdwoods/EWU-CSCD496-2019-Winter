@@ -30,5 +30,17 @@ namespace SecretSanta.Api.Tests.Controllers
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [TestMethod]
+        public async Task AddUser_ValidUser_ReturnsCreated()
+        {
+            var client = Factory.CreateClient();
+            var userInut = new UserInputViewModel { FirstName = "Grant", LastName = "Woods" };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(userInut), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("/api/User", stringContent);
+
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+        }
     }
 }
