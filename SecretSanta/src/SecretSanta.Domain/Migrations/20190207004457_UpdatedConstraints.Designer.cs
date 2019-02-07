@@ -9,7 +9,7 @@ using SecretSanta.Domain.Models;
 namespace SecretSanta.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190205000941_UpdatedConstraints")]
+    [Migration("20190207004457_UpdatedConstraints")]
     partial class UpdatedConstraints
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,9 @@ namespace SecretSanta.Domain.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Groups");
                 });

@@ -8,6 +8,7 @@ using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SecretSanta.Api.Controllers
@@ -27,14 +28,14 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/group
         [HttpGet]
-        public ActionResult<IEnumerable<GroupViewModel>> GetAllGroups()
+        public IActionResult GetAllGroups()
         {
-            return _Mapper.Map <List<GroupViewModel>>(GroupService.FetchAll());
+            return Ok(_Mapper.Map <List<GroupViewModel>>(GroupService.FetchAll()));
         }
 
         // POST api/group
         [HttpPost]
-        public ActionResult<GroupViewModel> PostGroup(GroupInputViewModel viewModel)
+        public IActionResult PostGroup(GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -43,12 +44,12 @@ namespace SecretSanta.Api.Controllers
 
             var group = GroupService.AddGroup(_Mapper.Map<Group>(viewModel));
 
-            return _Mapper.Map<GroupViewModel>(GroupService.AddGroup(_Mapper.Map<Group>(viewModel)));
+            return CreatedAtAction("", _Mapper.Map<GroupViewModel>(GroupService.AddGroup(_Mapper.Map<Group>(viewModel))));
         }
 
         // PUT api/group/5
         [HttpPut("{id}")]
-        public ActionResult<GroupViewModel> PutGroup(int id, GroupInputViewModel viewModel)
+        public IActionResult PutGroup(int id, GroupInputViewModel viewModel)
         {
             if (viewModel == null)
             {
@@ -61,12 +62,13 @@ namespace SecretSanta.Api.Controllers
             }
 
             fetchedGroup.Name = viewModel.Name;
+            GroupService.UpdateGroup(fetchedGroup);
 
-            return NoContent();//_Mapper.Map<GroupViewModel>(GroupService.UpdateGroup(fetchedGroup));
+            return NoContent();
         }
 
         [HttpPut("{groupId}/{userid}")]
-        public ActionResult PutUserToGroup(int groupId, int userId)
+        public IActionResult PutUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0 || userId <=0)
             {
@@ -75,7 +77,7 @@ namespace SecretSanta.Api.Controllers
 
             if (!GroupService.AddUserToGroup(groupId, userId))
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return NoContent();
@@ -83,7 +85,7 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/group/5
         [HttpDelete("{id}")]
-        public ActionResult DeleteGroup(int id)
+        public IActionResult DeleteGroup(int id)
         {
             if (id <= 0)
             {

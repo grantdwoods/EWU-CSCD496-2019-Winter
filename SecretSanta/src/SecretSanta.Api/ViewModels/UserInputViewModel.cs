@@ -9,7 +9,7 @@ namespace SecretSanta.Api.ViewModels
 {
     public class UserInputViewModel
     {
-        [Required] //Works on the API but will cause problems with unit tests
+        [Required] 
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }

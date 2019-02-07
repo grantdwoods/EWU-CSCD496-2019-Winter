@@ -18,7 +18,11 @@ namespace SecretSanta.Api.Tests.Controllers
         [AssemblyInitialize]
         static public void InitMapper(TestContext testContext)
         {
-            Mapper.Initialize(cfg => cfg.AddProfile(new GroupMapperProfile()));
+            Mapper.Initialize(cfg => {
+                cfg.AddProfile(new GroupMapperProfile());
+                cfg.AddProfile(new UserMapperProfile());
+                cfg.AddProfile(new GiftMapperProfile());
+            });
         }
         private IMapper _Mapper { get; set; }
 
@@ -48,10 +52,10 @@ namespace SecretSanta.Api.Tests.Controllers
             };
             var controller = new GiftController(testService, _Mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
-
+            var result = (OkObjectResult)controller.GetGiftForUser(4);
+            var giftsResult = (List<GiftViewModel>)result.Value;
             Assert.AreEqual(4, testService.GetGiftsForUser_UserId);
-            GiftViewModel resultGift = result.Value.Single();
+            GiftViewModel resultGift = giftsResult.Single();
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
             Assert.AreEqual(gift.Description, resultGift.Description);
@@ -65,9 +69,9 @@ namespace SecretSanta.Api.Tests.Controllers
             var testService = new TestableGiftService();
             var controller = new GiftController(testService, _Mapper);
 
-            ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
+            var result = controller.GetGiftForUser(-1);
 
-            Assert.IsTrue(result.Result is NotFoundResult);
+            Assert.IsTrue(result is NotFoundResult);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
