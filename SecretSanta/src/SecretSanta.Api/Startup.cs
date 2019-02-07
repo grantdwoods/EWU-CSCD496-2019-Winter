@@ -44,18 +44,15 @@ namespace SecretSanta.Api
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            Mapper.Initialize(cfg =>
-            {
+            services.AddAutoMapper(cfg => {
                 cfg.ShouldMapProperty = GroupUser => false;
                 cfg.ShouldMapProperty = Gifts => false;
                 cfg.ShouldMapProperty = User => false;
-                
+
                 cfg.AddProfile(new UserMapperProfile());
                 cfg.AddProfile(new GiftMapperProfile());
                 cfg.AddProfile(new GroupMapperProfile());
             });
-
-            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
