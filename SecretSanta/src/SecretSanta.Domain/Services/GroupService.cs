@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -49,14 +50,14 @@ namespace SecretSanta.Domain.Services
                 .ToList();
         }
 
-        public bool AddUserToGroup(int groupId, int userId)
+        public async Task<bool> AddUserToGroup(int groupId, int userId)
         {
-            Group foundGroup = DbContext.Groups
+            Group foundGroup = await DbContext.Groups
                 .Include(x => x.GroupUsers)
-                .FirstOrDefault(x => x.Id == groupId);
+                .FirstOrDefaultAsync(x => x.Id == groupId);
             if (foundGroup == null) return false;
 
-            User foundUser = DbContext.Users.Find(userId);
+            User foundUser = await DbContext.Users.FindAsync(userId);
             if (foundUser == null) return false;
 
             var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
@@ -65,7 +66,7 @@ namespace SecretSanta.Domain.Services
                 foundGroup.GroupUsers = new List<GroupUser>();
             }
             foundGroup.GroupUsers.Add(groupUser);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
 
             return true;
         }

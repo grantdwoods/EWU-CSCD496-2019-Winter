@@ -20,7 +20,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpPut("{groupId}")]
-        public IActionResult AddUserToGroup(int groupId, int userId)
+        public async Task<IActionResult> AddUserToGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (GroupService.AddUserToGroup(groupId, userId))
+            if (await GroupService.AddUserToGroup(groupId, userId))
             {
                 return Ok();
             }

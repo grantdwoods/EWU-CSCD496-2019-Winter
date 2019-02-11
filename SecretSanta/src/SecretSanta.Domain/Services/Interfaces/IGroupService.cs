@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Services.Interfaces
 {
@@ -16,7 +17,7 @@ namespace SecretSanta.Domain.Services.Interfaces
 
         bool DeleteGroup(int groupId);
 
-        bool AddUserToGroup(int groupId, int userId);
+        Task<bool> AddUserToGroup(int groupId, int userId);
 
         bool RemoveUserFromGroup(int groupId, int userId);
     }
