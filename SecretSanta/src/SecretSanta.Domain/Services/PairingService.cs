@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Services
 {
-    class PairingService : IPairingService
+    public class PairingService : IPairingService
     {
         private ApplicationDbContext DbContext { get; }
 
