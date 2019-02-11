@@ -40,7 +40,7 @@ namespace SecretSanta.Api.Controllers
         }
 
         [HttpDelete("{groupId}")]
-        public IActionResult RemoveUserFromGroup(int groupId, int userId)
+        public async Task<IActionResult> RemoveUserFromGroup(int groupId, int userId)
         {
             if (groupId <= 0)
             {
@@ -52,7 +52,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (GroupService.RemoveUserFromGroup(groupId, userId))
+            if (await GroupService.RemoveUserFromGroup(groupId, userId))
             {
                 return Ok();
             }

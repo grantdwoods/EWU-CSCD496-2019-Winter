@@ -1,6 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Tests.Services
 {
@@ -8,7 +10,7 @@ namespace SecretSanta.Domain.Tests.Services
     public class GiftServiceTests : DatabaseServiceTests
     {
         [TestMethod]
-        public void AddGift()
+        public async Task AddGift()
         {
             using (var context = new ApplicationDbContext(Options))
             {
@@ -21,7 +23,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = await userService.AddUser(user);
 
                 var gift = new Gift
                 {
@@ -29,14 +31,14 @@ namespace SecretSanta.Domain.Tests.Services
                     OrderOfImportance = 1
                 };
 
-                var persistedGift = giftService.AddGiftToUser(user.Id, gift);
+                Gift persistedGift = await giftService.AddGiftToUser(user.Id, gift);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
         }
 
         [TestMethod]
-        public void UpdateGift()
+        public async Task UpdateGift()
         {
             using (var context = new ApplicationDbContext(Options))
             {
@@ -49,7 +51,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = await userService.AddUser(user);
 
                 var gift = new Gift
                 {
@@ -57,7 +59,7 @@ namespace SecretSanta.Domain.Tests.Services
                     OrderOfImportance = 1
                 };
 
-                var persistedGift = giftService.AddGiftToUser(user.Id, gift);
+                Gift persistedGift = await giftService.AddGiftToUser(user.Id, gift);
 
                 Assert.AreNotEqual(0, persistedGift.Id);
             }
@@ -67,8 +69,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = userService.FetchAll();
-                var gifts = giftService.GetGiftsForUser(users[0].Id);
+                List<User> users = await userService.FetchAll();
+                List<Gift> gifts =  await giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
 
@@ -81,8 +83,8 @@ namespace SecretSanta.Domain.Tests.Services
                 GiftService giftService = new GiftService(context);
                 UserService userService = new UserService(context);
 
-                var users = userService.FetchAll();
-                var gifts = giftService.GetGiftsForUser(users[0].Id);
+                List<User> users = await userService.FetchAll();
+                List<Gift> gifts = await giftService.GetGiftsForUser(users[0].Id);
 
                 Assert.IsTrue(gifts.Count > 0);
                 Assert.AreEqual("Horse", gifts[0].Title);            
