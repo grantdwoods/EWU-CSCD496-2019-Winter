@@ -19,14 +19,14 @@ namespace SecretSanta.Domain.Services
 
         public async Task<User> AddUser(User user)
         {
-            await DbContext.Users.AddAsync(user);
+            DbContext.Users.Add(user);
             await DbContext.SaveChangesAsync();
             return user;
         }
 
         public async Task<User> UpdateUser(User user)
         {
-            await Task.Run(() => DbContext.Users.Update(user));
+            DbContext.Users.Update(user);
             await DbContext.SaveChangesAsync();
             return user;
         }
@@ -47,7 +47,7 @@ namespace SecretSanta.Domain.Services
 
             if (foundUser != null)
             {
-                await Task.Run(() => DbContext.Users.Remove(foundUser));
+                DbContext.Users.Remove(foundUser);
                 await DbContext.SaveChangesAsync();
                 return true;
             }

@@ -32,7 +32,7 @@ namespace SecretSanta.Domain.Services
 
             List<Pairing> pairings = await Task.Run(()=> GetPairings(userIds));
 
-            await DbContext.Pairings.AddRangeAsync(pairings);
+            DbContext.Pairings.AddRange(pairings);
             await DbContext.SaveChangesAsync();
 
             return true;
