@@ -19,7 +19,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<Group> AddGroup(Group group)
         {
-            await DbContext.Groups.AddAsync(group);
+            DbContext.Groups.Add(group);
             await DbContext.SaveChangesAsync();
             return group;
         }
@@ -31,7 +31,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<Group> UpdateGroup(Group group)
         {
-            await Task.Run(() => DbContext.Groups.Update(group));
+            DbContext.Groups.Update(group);
             await DbContext.SaveChangesAsync();
             return group;
         }
@@ -82,7 +82,7 @@ namespace SecretSanta.Domain.Services
 
             if (mapping == null) return false;
 
-            await Task.Run(() => foundGroup.GroupUsers.Remove(mapping));
+            foundGroup.GroupUsers.Remove(mapping);
             await DbContext.SaveChangesAsync();
 
             return true;
@@ -94,7 +94,7 @@ namespace SecretSanta.Domain.Services
 
             if (foundGroup != null)
             {
-                await Task.Run(() => DbContext.Groups.Remove(foundGroup));
+                DbContext.Groups.Remove(foundGroup);
                 await DbContext.SaveChangesAsync();
                 return true;
             }
