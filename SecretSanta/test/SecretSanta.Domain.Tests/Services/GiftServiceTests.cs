@@ -75,7 +75,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.IsTrue(gifts.Count > 0);
 
                 gifts[0].Title = "Horse";
-                giftService.UpdateGiftForUser(users[0].Id, gifts[0]);                
+                await giftService.UpdateGiftForUser(users[0].Id, gifts[0]);                
             }
 
             using (var context = new ApplicationDbContext(Options))

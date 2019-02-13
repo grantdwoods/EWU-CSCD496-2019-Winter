@@ -90,7 +90,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A User id must be specified");
             }
             
-            if (await Task.Run(() => UserService.DeleteUser(id)))
+            if (await UserService.DeleteUser(id))
             {
                 return Ok();
             }
