@@ -9,6 +9,7 @@ namespace SecretSanta.Api.ViewModels
     public class PairingViewModel
     {
         public int Id { get; set; }
+        public int GroupId { get; set; }
         [Required]
         public int SantaId { get; set; }
         [Required]

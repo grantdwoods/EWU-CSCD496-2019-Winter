@@ -5,6 +5,7 @@ namespace SecretSanta.Domain.Models
     public class Pairing
     {
         public int Id { get; set; }
+        public int GroupId { get; set; }
         public int SantaId { get; set; }
         [ForeignKey("SantaId")]
         public User Santa { get; set; }
