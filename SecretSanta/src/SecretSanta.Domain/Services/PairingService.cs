@@ -21,6 +21,10 @@ namespace SecretSanta.Domain.Services
         }
         public async Task<List<Pairing>> GeneratePairings(int groupId)
         {
+            if (groupId <= 0)
+            {
+                return null;
+            }
             Group group = await DbContext.Groups
                 .Include(x => x.GroupUsers)
                 .SingleOrDefaultAsync(x => x.Id == groupId);
@@ -49,8 +53,10 @@ namespace SecretSanta.Domain.Services
             {
                 indices.Add(i);
             }
+
             int indexRange = indices.Count;
             indexRange--;
+
             lock (RandomKey)
             {
                 for(int i = 0; i < userIds.Count; i++, indexRange--)

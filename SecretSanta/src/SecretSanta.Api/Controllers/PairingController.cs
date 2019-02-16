@@ -27,6 +27,10 @@ namespace SecretSanta.Api.Controllers
         [Produces(typeof(List<PairingViewModel>))]
         public async Task<IActionResult> Post(int groupId)
         {
+            if(groupId <= 0)
+            {
+                return BadRequest("Group ID must be positive.");
+            }
             List<Pairing> domainPairings = await PairingService.GeneratePairings(groupId);
 
             if(domainPairings == null)
@@ -35,7 +39,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<PairingViewModel> viewPairings = domainPairings.Select(x => Mapper.Map<PairingViewModel>(x)).ToList();
 
-            return Created($"Pairing/{groupId}" ,viewPairings);
+            return Created($"api/Pairing/{groupId}" ,viewPairings);
         }
 
         [HttpGet("{groupId}")]
