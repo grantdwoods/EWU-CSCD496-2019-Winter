@@ -43,7 +43,9 @@ namespace SecretSanta.Api.Tests.Controllers
                     };
             });
         }
-        private Task<List<Pairing>> CreatePairings(List<int> userIds, int groupId)
+
+        //Pairings do not need to be "randomized" for controller tests.
+        private List<Pairing> CreateOrderedPairings(List<int> userIds, int groupId)
         {
             var pairings = new List<Pairing>();
 
@@ -64,7 +66,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 GroupId = groupId
             });
 
-            return Task.FromResult(pairings);
+            return pairings;
         }
 
         [TestMethod]
@@ -73,9 +75,10 @@ namespace SecretSanta.Api.Tests.Controllers
             List<int> userIds = new List<int> { 1, 2, 3, 4, 5 };
             int groupId = 1;
 
-            Task<List<Pairing>> pairings = CreatePairings(userIds, groupId);
+            List<Pairing> pairings = CreateOrderedPairings(userIds, groupId);
 
-            MockPairingService.Setup(x => x.GeneratePairings(groupId)).Returns(pairings);
+            MockPairingService.Setup(x => x.GeneratePairings(groupId))
+                .Returns(Task.FromResult(pairings));
             SetUpMockMapper();
 
             var controller = Mocker.CreateInstance<PairingController>();
@@ -95,6 +98,21 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public async Task PostPairing_ValidGroupNumberButServiceReturnsNull_ReturnsBadRequestObject()
+        {
+            int groupId = 1;
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            MockPairingService.Setup(x => x.GeneratePairings(It.IsAny<int>()))
+                .Returns(Task.FromResult<List<Pairing>>(null));
+
+            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+        }
+        
+
+        [TestMethod]
         [DataRow(0)]
         [DataRow(-1)]
         public async Task PostPairing_RequiresPositiveId_ReturnsBadRequestResult(int groupId)
@@ -105,6 +123,29 @@ namespace SecretSanta.Api.Tests.Controllers
             BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
 
             Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetPairingsByGroupId_FoundPairings_ReturnsOKwithList()
+        {
+            List<int> userIds = new List<int> { 1, 2 };
+            int groupId = 1;
+            List<Pairing> pairings = CreateOrderedPairings(userIds, groupId);
+
+            SetUpMockMapper();
+
+            MockPairingService.Setup(x => x.GetPairingsByGroupId(groupId))
+                .Returns(Task.FromResult(pairings));
+
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            OkObjectResult result = await controller.Get(groupId) as OkObjectResult;
+            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual<int>(1, resultPairings.First().GroupId);
+            Assert.AreEqual<int>(1, resultPairings.Last().GroupId);
+            Mocker.VerifyAll();
         }
     }
 }
