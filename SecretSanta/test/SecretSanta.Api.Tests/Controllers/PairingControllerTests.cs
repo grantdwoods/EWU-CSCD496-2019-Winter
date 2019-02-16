@@ -19,7 +19,6 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class PairingControllerTests
     {
-        private IMapper _Mapper { get; set; }
         private AutoMocker Mocker { get; set; }
         private Mock<IPairingService> MockPairingService { get; set; }
         private Mock<IMapper> MockMapper { get; set; }
@@ -27,7 +26,6 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestInitialize]
         public void SetProperties()
         {
-            _Mapper = Mapper.Instance;
             Mocker = new AutoMocker();
             MockPairingService = Mocker.GetMock<IPairingService>();
             MockMapper = Mocker.GetMock<IMapper>();
@@ -108,7 +106,5 @@ namespace SecretSanta.Api.Tests.Controllers
 
             Assert.IsNotNull(result);
         }
-
-
     }
 }
