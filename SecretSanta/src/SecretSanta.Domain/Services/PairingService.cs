@@ -16,7 +16,7 @@ namespace SecretSanta.Domain.Services
 
         public PairingService(ApplicationDbContext dbContext, IRandomService random)
         {
-            Random = random;
+            Random = random ?? throw new ArgumentNullException(nameof(random));
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
         public async Task<List<Pairing>> GeneratePairings(int groupId)
@@ -25,6 +25,7 @@ namespace SecretSanta.Domain.Services
             {
                 return null;
             }
+
             Group group = await DbContext.Groups
                 .Include(x => x.GroupUsers)
                 .SingleOrDefaultAsync(x => x.Id == groupId);

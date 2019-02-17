@@ -6,12 +6,9 @@ using Moq.AutoMock;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
-using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Tests.Controllers

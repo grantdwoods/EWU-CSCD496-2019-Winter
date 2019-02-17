@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Moq.AutoMock;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
-using SecretSanta.Domain.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
