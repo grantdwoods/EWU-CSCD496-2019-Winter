@@ -29,23 +29,88 @@ namespace SecretSanta.Api.Tests.Controllers
             Mocker = new AutoMocker();
             MockPairingService = Mocker.GetMock<IPairingService>();
             MockMapper = Mocker.GetMock<IMapper>();
+            Mocker.Use(Mapper.Instance);
         }
-        
-        private void SetUpMockMapper()
+
+        [TestMethod]
+        [DataRow(new int[] { 1, 2, 3, 4, 5 })]
+        [DataRow(new int[] { 45, 68 })]
+        public async Task PostPairing_ValidGroupNumber_ReturnsCreated(int[] ids)
         {
-            MockMapper.Setup(x => x.Map<PairingViewModel>(It.IsAny<Pairing>()))
-            .Returns((Pairing p) => {
-                    return new PairingViewModel
-                    {
-                        SantaId = p.SantaId,
-                        RecipientId = p.RecipientId,
-                         GroupId = p.GroupId
-                    };
-            });
+            List<int> userIds = new List<int> (ids);
+            int groupId = 1;
+
+            List<Pairing> pairings = CreatePairings(userIds, groupId);
+
+            MockPairingService.Setup(x => x.GeneratePairings(groupId))
+                .Returns(Task.FromResult(pairings));
+
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            CreatedResult result = await controller.Post(groupId) as CreatedResult;
+
+            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
+            var firstPairing = resultPairings.First();
+            var lastPairing = resultPairings.Last();
+
+            Assert.AreEqual<int>(groupId, firstPairing.GroupId);
+            Assert.AreEqual<int>(userIds.First(), firstPairing.SantaId);
+            Assert.AreEqual<int>(userIds[1], firstPairing.RecipientId);
+            Assert.AreEqual<int>(userIds.Last(), lastPairing.SantaId);
+            Assert.AreEqual<int>(userIds.First(), lastPairing.RecipientId);
+            Mocker.VerifyAll();
+        }
+
+        [TestMethod]
+        public async Task PostPairing_ValidGroupNumberButServiceReturnsNull_ReturnsBadRequestObject()
+        {
+            int groupId = 1;
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            MockPairingService.Setup(x => x.GeneratePairings(It.IsAny<int>()))
+                .Returns(Task.FromResult<List<Pairing>>(null));
+
+            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-1)]
+        public async Task PostPairing_RequiresPositiveId_ReturnsBadRequestResult(int groupId)
+        {
+            var controller = Mocker.CreateInstance<PairingController>();
+            MockPairingService = new Mock<IPairingService>(MockBehavior.Strict);
+
+            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetPairingsByGroupId_FoundPairings_ReturnsOKwithList()
+        {
+            List<int> userIds = new List<int> { 1, 2 };
+            int groupId = 1;
+            List<Pairing> pairings = CreatePairings(userIds, groupId);
+
+            MockPairingService.Setup(x => x.GetPairingsByGroupId(groupId))
+                .Returns(Task.FromResult(pairings));
+
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            OkObjectResult result = await controller.Get(groupId) as OkObjectResult;
+            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual<int>(1, resultPairings.First().GroupId);
+            Assert.AreEqual<int>(1, resultPairings.Last().GroupId);
+            Mocker.VerifyAll();
         }
 
         //Pairings do not need to be "randomized" for controller tests.
-        private List<Pairing> CreateOrderedPairings(List<int> userIds, int groupId)
+        private List<Pairing> CreatePairings(List<int> userIds, int groupId)
         {
             var pairings = new List<Pairing>();
 
@@ -67,85 +132,6 @@ namespace SecretSanta.Api.Tests.Controllers
             });
 
             return pairings;
-        }
-
-        [TestMethod]
-        public async Task PostPairing_ValidGroupNumber_ReturnsCreated()
-        {
-            List<int> userIds = new List<int> { 1, 2, 3, 4, 5 };
-            int groupId = 1;
-
-            List<Pairing> pairings = CreateOrderedPairings(userIds, groupId);
-
-            MockPairingService.Setup(x => x.GeneratePairings(groupId))
-                .Returns(Task.FromResult(pairings));
-            SetUpMockMapper();
-
-            var controller = Mocker.CreateInstance<PairingController>();
-
-            CreatedResult result = await controller.Post(groupId) as CreatedResult;
-
-            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
-            var firstPairing = resultPairings.First();
-            var lastPairing = resultPairings.Last();
-
-            Assert.AreEqual<int>(groupId, firstPairing.GroupId);
-            Assert.AreEqual<int>(1, firstPairing.SantaId);
-            Assert.AreEqual<int>(2, firstPairing.RecipientId);
-            Assert.AreEqual<int>(5, lastPairing.SantaId);
-            Assert.AreEqual<int>(1, lastPairing.RecipientId);
-            Mocker.VerifyAll();
-        }
-
-        [TestMethod]
-        public async Task PostPairing_ValidGroupNumberButServiceReturnsNull_ReturnsBadRequestObject()
-        {
-            int groupId = 1;
-            var controller = Mocker.CreateInstance<PairingController>();
-
-            MockPairingService.Setup(x => x.GeneratePairings(It.IsAny<int>()))
-                .Returns(Task.FromResult<List<Pairing>>(null));
-
-            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
-
-            Assert.IsNotNull(result);
-        }
-        
-
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(-1)]
-        public async Task PostPairing_RequiresPositiveId_ReturnsBadRequestResult(int groupId)
-        {
-            var controller = Mocker.CreateInstance<PairingController>();
-            MockPairingService = new Mock<IPairingService>(MockBehavior.Strict);
-
-            BadRequestObjectResult result = await controller.Post(groupId) as BadRequestObjectResult;
-
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public async Task GetPairingsByGroupId_FoundPairings_ReturnsOKwithList()
-        {
-            List<int> userIds = new List<int> { 1, 2 };
-            int groupId = 1;
-            List<Pairing> pairings = CreateOrderedPairings(userIds, groupId);
-
-            SetUpMockMapper();
-
-            MockPairingService.Setup(x => x.GetPairingsByGroupId(groupId))
-                .Returns(Task.FromResult(pairings));
-
-            var controller = Mocker.CreateInstance<PairingController>();
-
-            OkObjectResult result = await controller.Get(groupId) as OkObjectResult;
-            List<PairingViewModel> resultPairings = result.Value as List<PairingViewModel>;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual<int>(1, resultPairings.First().GroupId);
-            Assert.AreEqual<int>(1, resultPairings.Last().GroupId);
-            Mocker.VerifyAll();
         }
     }
 }
