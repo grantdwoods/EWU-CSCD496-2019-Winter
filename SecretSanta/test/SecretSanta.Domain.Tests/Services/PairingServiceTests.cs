@@ -52,28 +52,73 @@ namespace SecretSanta.Domain.Tests.Services
             int groupId = 20;
             int[] userIds = { 1, 2, 3 };
             await SetupValidGroupAndUsers(groupId, userIds);
-            var mockRandomService = new Mock<IRandomService>(MockBehavior.Strict);
 
             using (var context = new ApplicationDbContext(Options))
             {
+                var mockRandomService = new Mock<IRandomService>(MockBehavior.Strict);
                 var pairingService = new PairingService(context, mockRandomService.Object);
                 List<Pairing> pairings = await pairingService.GeneratePairings(invalidId);
                 Assert.IsNull(pairings);
             }
         }
+
         [TestMethod]
         [DataRow(1, new int[] { 1 })]
         [DataRow(1, null)]
         public async Task GeneratePairings_NotEnoughGroupMembers_ReturnsNull(int groupId, int[] userIds)
         {
             await SetupInvalidGroupAndUsers(groupId, userIds);
-            var mockRandomService = new Mock<IRandomService>(MockBehavior.Strict);
 
             using (var context = new ApplicationDbContext(Options))
             {
+                var mockRandomService = new Mock<IRandomService>(MockBehavior.Strict);
                 var pairingService = new PairingService(context, mockRandomService.Object);
                 List<Pairing> pairings = await pairingService.GeneratePairings(groupId);
                 Assert.IsNull(pairings);
+            }
+        }
+
+        [TestMethod]
+        public async Task GetPairingsByGroupId_FoundPairings_returnsPairingList()
+        {
+            int groupId = 1;
+            int[] userIds = { 1, 2 };
+            await SetupValidGroupAndUsers(groupId, userIds);
+
+            List<Pairing> pairings = new List<Pairing>{
+                new Pairing { GroupId = 1, SantaId = 1, RecipientId = 2},
+                new Pairing { GroupId = 1, SantaId = 2, RecipientId = 1}
+            };
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Pairings.AddRange(pairings);
+                await context.SaveChangesAsync();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var randomMock = new Mock<IRandomService>();
+                var pairingService = new PairingService(context, randomMock.Object);
+                List<Pairing> foundPairings = await pairingService.GetPairingsByGroupId(groupId);
+
+                Assert.AreEqual<int>(2, foundPairings.Count);
+                Assert.AreNotEqual<int>(0, foundPairings.First().Id);
+            }
+        }
+
+        
+        [TestMethod]
+        public async Task GetPairingsByGroupId_NoFoundPairings_returnsEmptyList()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var mockRandomService = new Mock<IRandomService>();
+                var pairingService = new PairingService(context, mockRandomService.Object);
+
+                List<Pairing> pairings = await pairingService.GetPairingsByGroupId(1);
+
+                Assert.AreEqual<int>(0, pairings.Count);
             }
         }
 

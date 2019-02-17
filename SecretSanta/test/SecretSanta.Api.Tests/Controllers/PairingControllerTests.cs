@@ -109,6 +109,20 @@ namespace SecretSanta.Api.Tests.Controllers
             Mocker.VerifyAll();
         }
 
+        [TestMethod]
+        public async Task GetPairingsByGroupId_NoFoundPairings_ReturnsNotFound()
+        {
+            MockPairingService.Setup(x => x.GetPairingsByGroupId(1))
+                .Returns(Task.FromResult<List<Pairing>>(null));
+
+            var controller = Mocker.CreateInstance<PairingController>();
+
+            NotFoundResult result = await controller.Get(1) as NotFoundResult;
+
+            Assert.IsNotNull(result);
+            Mocker.VerifyAll();
+        }
+
         //Pairings do not need to be "randomized" for controller tests.
         private List<Pairing> CreatePairings(List<int> userIds, int groupId)
         {

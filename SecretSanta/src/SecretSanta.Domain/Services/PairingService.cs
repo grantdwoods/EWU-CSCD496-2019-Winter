@@ -90,7 +90,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<List<Pairing>> GetPairingsByGroupId(int groupId)
         {
-            return await DbContext.Pairings?.Where(x => x.GroupId == groupId)?.ToListAsync();
+            return await DbContext.Pairings?.Where(x => x.GroupId == groupId).ToListAsync();
         }
     }
 }
