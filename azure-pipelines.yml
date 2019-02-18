@@ -21,3 +21,9 @@ steps:
     command: test
     projects: 'SecretSanta/test/**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+    
+ - task: AzureRmWebAppDeployment@3
+  inputs:
+    azureSubscription: '1be96e15-9a3f-408c-ba46-14fab07e631c'
+    WebAppName: 'gwSecretSanta'
+    Package: $(System.ArtifactsDirectory)/**/*.zip
