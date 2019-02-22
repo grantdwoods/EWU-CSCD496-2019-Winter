@@ -56,6 +56,7 @@ namespace SecretSanta.Api.Tests.Controllers
         [TestMethod]
         public async Task GetGiftForUser_RequiresPositiveUserId()
         {
+            Assert.Fail();
             var testService = new TestableGiftService();
             var controller = new GiftsController(testService, Mapper.Instance);
 
