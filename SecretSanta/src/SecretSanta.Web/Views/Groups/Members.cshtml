@@ -13,10 +13,20 @@
 @if (ViewBag.Group != null)
 {
     <h1 class="title is-1">Members in @ViewBag.Group.Name</h1>
-    @foreach (var groupUser in ViewBag.Group.GroupUsers)
+    if (ViewBag.Group.GroupUsers.Count == 0)
     {
-        <p>
-            @groupUser.User.FirstName
-        </p>
+        <p>There are no Users currently in this group.</p>
     }
+    else
+    {
+        foreach (var groupUser in ViewBag.Group.GroupUsers)
+        {
+            <p>
+                @groupUser.User.FirstName
+            </p>
+        }
+    }
+
+    <a asp-controller="Groups" asp-action="AddMembers" asp-route-groupId="@ViewBag.Group.Id" asp-route-name="@ViewBag.Group.Name"
+    class="button is-primary">Add Users to @ViewBag.Group.Name</a>
 }

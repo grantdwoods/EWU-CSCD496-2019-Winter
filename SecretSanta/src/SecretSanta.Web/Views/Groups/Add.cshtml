@@ -1,0 +1,29 @@
+﻿@model GroupInputViewModel
+@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <article class="message is-warning">
+        <div class="message-header">
+            <p>Data was not saved.</p>
+        </div>
+        <div class="message-body">
+            @ViewBag.ErrorMessage
+        </div>
+    </article>
+
+}
+<form asp-route="Add">
+    <div class="field">
+        <label class="label" asp-for="Name">First Name</label>
+        <div class="control">
+            <input class="input" type="text" asp-for="Name" />
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary">Submit</button>
+        </div>
+        <div class="control">
+            <button asp-controller="Group" asp-action="Add" class="button is-light">Cancel</button>
+        </div>
+    </div>
+</form>
