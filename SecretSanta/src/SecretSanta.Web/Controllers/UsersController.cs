@@ -64,45 +64,29 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Delete(int userId)
         {
             IActionResult result = View();
-            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            if (userId <= 0)
             {
-                try
+                ViewBag.ErrorMessage = "Invalid UserID.";
+            }
+            else
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
-                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    ViewBag.User = await secretSantaClient.GetUserAsync(userId);    
-                }
-                catch (SwaggerException se)
-                {
-                    ViewBag.ErrorMessage = se.Message;
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.DeleteUserAsync(userId);
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
                 }
             }
-            if(ViewBag.User == null)
-            {
-                ViewBag.ErrorMessage = "User not found.";
-            }
+
             return result;
         }
-
-        //[route("users/delete/deleteconfirmed/{userid}")]
-        //public async task<iactionresult>deleteconfirmed(int userid)
-        //{
-        //    iactionresult result = view();
-        //    using (var httpclient = clientfactory.createclient("secretsantaapi"))
-        //    {
-        //        try
-        //        {
-        //            var secretsantaclient = new secretsantaclient(httpclient.baseaddress.tostring(), httpclient);
-        //            await secretsantaclient.deleteuserasync(userid);
-        //            result = redirecttoaction(nameof(index));
-        //        }
-        //        catch (swaggerexception se)
-        //        {
-        //            viewbag.errormessage = se.message;
-        //        }
-        //    }
-
-        //    return view();
-        //}
 
         [HttpGet]
         [Route("Users/Update/{userId}")]

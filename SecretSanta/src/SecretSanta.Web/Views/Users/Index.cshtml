@@ -5,7 +5,8 @@
         <li>
             @user.FirstName @user.LastName
             <a asp-controller="Users" asp-action="Update"  asp-route-userId="@user.Id" class="button is-primary">Update</a>
-            <a asp-controller="Users" asp-action="Delete"  asp-route-userId="@user.Id"class="button is-danger">Delete</a>
+            <a asp-controller="Users" asp-action="Delete"  asp-route-userId="@user.Id"class="button is-danger"
+             onclick="return confirm('Are you sure you want to delete @user.FirstName @user.LastName?')">Delete</a>
         </li>
     }
 </ul>

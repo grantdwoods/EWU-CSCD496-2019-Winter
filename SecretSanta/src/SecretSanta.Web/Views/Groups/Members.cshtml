@@ -1,0 +1,22 @@
+﻿@if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+{
+    <article class="message is-warning">
+        <div class="message-header">
+            <p>No Groups were found.</p>
+        </div>
+        <div class="message-body">
+            @ViewBag.ErrorMessage
+        </div>
+    </article>
+}
+
+@if (ViewBag.Group != null)
+{
+    <h1 class="title is-1">Members in @ViewBag.Group.Name</h1>
+    @foreach (var groupUser in ViewBag.Group.GroupUsers)
+    {
+        <p>
+            @groupUser.User.FirstName
+        </p>
+    }
+}
