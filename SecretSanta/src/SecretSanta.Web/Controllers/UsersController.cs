@@ -69,8 +69,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    ViewBag.User = await secretSantaClient.GetUserAsync(userId);
-                    result = RedirectToAction(nameof(Index));
+                    ViewBag.User = await secretSantaClient.GetUserAsync(userId);    
                 }
                 catch (SwaggerException se)
                 {
@@ -81,8 +80,30 @@ namespace SecretSanta.Web.Controllers
             {
                 ViewBag.ErrorMessage = "User not found.";
             }
-            return View();
+            return result;
         }
+
+        //[route("users/delete/deleteconfirmed/{userid}")]
+        //public async task<iactionresult>deleteconfirmed(int userid)
+        //{
+        //    iactionresult result = view();
+        //    using (var httpclient = clientfactory.createclient("secretsantaapi"))
+        //    {
+        //        try
+        //        {
+        //            var secretsantaclient = new secretsantaclient(httpclient.baseaddress.tostring(), httpclient);
+        //            await secretsantaclient.deleteuserasync(userid);
+        //            result = redirecttoaction(nameof(index));
+        //        }
+        //        catch (swaggerexception se)
+        //        {
+        //            viewbag.errormessage = se.message;
+        //        }
+        //    }
+
+        //    return view();
+        //}
+
         [HttpGet]
         [Route("Users/Update/{userId}")]
         public IActionResult Update(int userId)
