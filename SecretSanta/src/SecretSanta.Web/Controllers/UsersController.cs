@@ -45,11 +45,78 @@ namespace SecretSanta.Web.Controllers
 
                         result = RedirectToAction(nameof(Index));
                     }
-                    catch(SwaggerException se)
+                    catch (SwaggerException se)
                     {
                         ViewBag.ErrorMessage = se.Message;
                     }
                 }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "The information provided was invalid. User must have a first name.";
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        [Route("Users/Delete/{userId}")]
+        public async Task<IActionResult> Delete(int userId)
+        {
+            IActionResult result = View();
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    ViewBag.User = await secretSantaClient.GetUserAsync(userId);
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException se)
+                {
+                    ViewBag.ErrorMessage = se.Message;
+                }
+            }
+            if(ViewBag.User == null)
+            {
+                ViewBag.ErrorMessage = "User not found.";
+            }
+            return View();
+        }
+        [HttpGet]
+        [Route("Users/Update/{userId}")]
+        public IActionResult Update(int userId)
+        {
+            ViewBag.UserId = userId;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Users/Update/{userId}")]
+        public async Task<IActionResult> Update(UserInputViewModel viewModel, int userId)
+        {
+            IActionResult result = View();
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+                {
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.UpdateUserAsync(userId, viewModel);
+
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "The information provided was invalid. User must have a first name.";
             }
 
             return result;

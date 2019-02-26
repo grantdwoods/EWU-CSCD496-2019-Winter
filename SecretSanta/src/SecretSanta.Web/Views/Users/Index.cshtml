@@ -1,8 +1,12 @@
-﻿<h1 class="heading">Users</h1>
-<ul>
+﻿<h1 class="title is-1">Users</h1>
+<ul class="buttons are-small">
     @foreach (var user in ViewBag.Users)
     {
-        <li>@user.FirstName @user.LastName</li>
+        <li>
+            @user.FirstName @user.LastName
+            <a asp-controller="Users" asp-action="Update"  asp-route-userId="@user.Id" class="button is-primary">Update</a>
+            <a asp-controller="Users" asp-action="Delete"  asp-route-userId="@user.Id"class="button is-danger">Delete</a>
+        </li>
     }
 </ul>
 <a asp-controller="Users" asp-action="Add" class="button is-primary">Add User</a>
