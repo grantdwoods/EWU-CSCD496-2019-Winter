@@ -61,7 +61,6 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        [Route("Users/Delete/{userId}")]
         public async Task<IActionResult> Delete(int userId)
         {
             IActionResult result = View();
@@ -90,7 +89,6 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        [Route("Users/Update/{userId}")]
         public IActionResult Update(int userId)
         {
             ViewBag.UserId = userId;
@@ -98,7 +96,6 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        [Route("Users/Update/{userId}")]
         public async Task<IActionResult> Update(UserInputViewModel viewModel, int userId)
         {
             IActionResult result = View();
