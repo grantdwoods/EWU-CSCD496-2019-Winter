@@ -98,6 +98,10 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Add(GroupInputViewModel group)
         {
             IActionResult result = View();
+            if (string.IsNullOrEmpty(group.Name))
+            {
+                ModelState.AddModelError("Name", "Group name is required!");
+            }
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 try

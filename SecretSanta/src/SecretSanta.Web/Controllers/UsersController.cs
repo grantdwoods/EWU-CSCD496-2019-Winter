@@ -54,7 +54,6 @@ namespace SecretSanta.Web.Controllers
             else
             {
                 ViewBag.ErrorMessage = "The information provided was invalid. User must have a first name.";
-                
             }
 
             return result;
