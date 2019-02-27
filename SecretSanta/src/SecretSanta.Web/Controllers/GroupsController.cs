@@ -98,21 +98,65 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Add(GroupInputViewModel group)
         {
             IActionResult result = View();
+
             if (string.IsNullOrEmpty(group.Name))
             {
+                ViewBag.ErrorMessage = "Missing fields";
                 ModelState.AddModelError("Name", "Group name is required!");
             }
-            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+
+            if (ModelState.IsValid)
             {
-                try
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
-                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.CreateGroupAsync(group);
-                    result = RedirectToAction(nameof(Index));
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.CreateGroupAsync(group);
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
                 }
-                catch (SwaggerException se)
+            }
+            return result;
+        }
+
+
+        [HttpGet]
+        public IActionResult Update(int groupId)
+        {
+            ViewBag.GroupId = groupId;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(GroupInputViewModel group, int groupId)
+        {
+            IActionResult result = View();
+
+            if (string.IsNullOrEmpty(group.Name))
+            {
+                ViewBag.ErrorMessage = "Missing fields";
+                ModelState.AddModelError("Name", "Group name is required!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
                 {
-                    ViewBag.ErrorMessage = se.Message;
+                    try
+                    {
+                        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                        await secretSantaClient.UpdateGroupAsync(groupId, group);
+                        result = RedirectToAction(nameof(Index));
+                    }
+                    catch (SwaggerException se)
+                    {
+                        ViewBag.ErrorMessage = se.Message;
+                    }
                 }
             }
             return result;
