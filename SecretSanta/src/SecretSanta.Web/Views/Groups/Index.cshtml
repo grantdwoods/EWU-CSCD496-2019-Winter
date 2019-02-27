@@ -4,8 +4,8 @@
  {
     <p class="buttons are-small">
         <a asp-controller="Groups" asp-action="Members" asp-route-groupId="@group.Id">@group.Name  </a>
-        <a asp-controller="Groups" asp-action="Update" asp-route-userId="@group.Id" class="button is-primary">Update</a>
-        <a asp-controller="Groups" asp-action="Delete" asp-route-userId="@group.Id" class="button is-danger"
+        <a asp-controller="Groups" asp-action="Update" asp-route-groupId="@group.Id" class="button is-primary">Update</a>
+        <a asp-controller="Groups" asp-action="Delete" asp-route-groupId="@group.Id" class="button is-danger"
             onclick="return confirm('Are you sure you want to delete @group.Name?')">Delete</a>
     </p>
  }
