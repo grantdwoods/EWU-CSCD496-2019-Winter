@@ -1,2 +1,14 @@
 ﻿<h1 class="title is-1">Add Members</h1>
-<h2 class="subtitle is-2">Users not in @ViewBag.GroupName</h2>
+<h2 class="subtitle is-2">Users not in @ViewBag.GroupName:</h2>
+
+@if (ViewBag.Users != null)
+{
+    foreach (var user in ViewBag.Users)
+    {
+        <p class="buttons are-small">
+        @user.FirstName @user.LastName
+        <a asp-controller="Groups" asp-action="AddMember" asp-route-groupId="@ViewBag.GroupId"
+           asp-route-userId="@user.Id" class="button is-light">Add Member</a>
+        </p>
+    }
+}

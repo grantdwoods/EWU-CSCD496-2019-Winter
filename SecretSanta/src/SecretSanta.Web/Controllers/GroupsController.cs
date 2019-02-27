@@ -60,14 +60,16 @@ namespace SecretSanta.Web.Controllers
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                ViewBag.Users = await secretSantaClient.GetAllUsersAsync();
+                ICollection<UserViewModel> users = await secretSantaClient.GetAllUsersAsync();
+                GroupViewModel group = await secretSantaClient.GetGroupAsync(groupId);
+                ViewBag.Users = users.Where(u => !group.GroupUsers.Any(gu => gu.UserId == u.Id));
             }
 
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddMembers(int groupId, int userId)
+        [HttpGet]
+        public async Task<IActionResult> AddMember(int groupId, int userId)
         {
             IActionResult result = View();
 
@@ -77,8 +79,7 @@ namespace SecretSanta.Web.Controllers
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                     await secretSantaClient.AddUserToGroupAsync(groupId, userId);
-                    result = RedirectToAction(nameof(AddMembers));
-                    ViewBag.SucessMessage = "User added to group!";
+                    result = RedirectToAction(nameof(AddMembers), new { groupId = groupId, groupName = ViewBag.GroupName });
                 }
                 catch (SwaggerException se)
                 {
