@@ -62,7 +62,9 @@ namespace SecretSanta.Web.Controllers
                 var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                 ICollection<UserViewModel> users = await secretSantaClient.GetAllUsersAsync();
                 GroupViewModel group = await secretSantaClient.GetGroupAsync(groupId);
-                ViewBag.Users = users.Where(u => !group.GroupUsers.Any(gu => gu.UserId == u.Id));
+                ViewBag.Users = users
+                    .Where(u => !group.GroupUsers
+                        .Any(gu => gu.UserId == u.Id));
             }
 
             return View();
@@ -79,7 +81,7 @@ namespace SecretSanta.Web.Controllers
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                     await secretSantaClient.AddUserToGroupAsync(groupId, userId);
-                    result = RedirectToAction(nameof(AddMembers), new { groupId = groupId, groupName = ViewBag.GroupName });
+                    result = RedirectToAction(nameof(AddMembers), new { groupId, groupName = ViewBag.GroupName });
                 }
                 catch (SwaggerException se)
                 {
