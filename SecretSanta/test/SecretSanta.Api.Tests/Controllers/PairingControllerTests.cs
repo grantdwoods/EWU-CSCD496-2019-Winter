@@ -18,14 +18,12 @@ namespace SecretSanta.Api.Tests.Controllers
     {
         private AutoMocker Mocker { get; set; }
         private Mock<IPairingService> MockPairingService { get; set; }
-        private Mock<IMapper> MockMapper { get; set; }
 
         [TestInitialize]
         public void SetProperties()
         {
             Mocker = new AutoMocker();
             MockPairingService = Mocker.GetMock<IPairingService>();
-            MockMapper = Mocker.GetMock<IMapper>();
             Mocker.Use(Mapper.Instance);
         }
 

@@ -19,8 +19,8 @@ namespace SecretSanta.Api.Controllers
 
         public PairingController(IPairingService pairingService, IMapper mapper)
         {
-            PairingService = pairingService;
-            Mapper = mapper;
+            PairingService = pairingService ?? throw new ArgumentException(nameof(pairingService));
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpPost]

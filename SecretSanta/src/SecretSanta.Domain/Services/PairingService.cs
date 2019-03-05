@@ -11,7 +11,6 @@ namespace SecretSanta.Domain.Services
 {
     public class PairingService : IPairingService {
         private IRandomService Random { get; }
-        private readonly object RandomKey = new object();
         private ApplicationDbContext DbContext { get; }
 
         public PairingService(ApplicationDbContext dbContext, IRandomService random)
@@ -58,17 +57,14 @@ namespace SecretSanta.Domain.Services
             int indexRange = indices.Count;
             indexRange--;
 
-            lock (RandomKey)
+            for(int i = 0; i < userIds.Count; i++, indexRange--)
             {
-                for(int i = 0; i < userIds.Count; i++, indexRange--)
-                {
-                    index = Random.Next(indexRange);
+                index = Random.Next(indexRange);
 
-                    randomIndices.Add(indices[index]);
-                    indices.Remove(indices[index]);
-                }
+                randomIndices.Add(indices[index]);
+                indices.Remove(indices[index]);
             }
-
+            
             var pairings = new List<Pairing>();
 
             for(int i = 0; i < userIds.Count-1; i++)
@@ -91,7 +87,8 @@ namespace SecretSanta.Domain.Services
 
         public async Task<List<Pairing>> GetPairingsByGroupId(int groupId)
         {
-            return await DbContext.Pairings?.Where(x => x.GroupId == groupId).ToListAsync();
+            List<Pairing> pairings = await DbContext.Pairings?.Where(x => x.GroupId == groupId).ToListAsync();
+            return pairings;
         }
     }
 }

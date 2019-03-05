@@ -142,7 +142,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             var service = new Mock<IGroupService>();
             service.Setup(x => x.DeleteGroup(2))
-                .Returns(Task.FromResult(false))
+                .ReturnsAsync(false)
                 .Verifiable();
             var controller = new GroupsController(service.Object, Mapper.Instance);
 

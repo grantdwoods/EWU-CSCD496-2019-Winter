@@ -5,20 +5,17 @@ namespace SecretSanta.Domain.Services
     public class RandomService : IRandomService
     {
         private Random Random { get; set; }
-
+        private readonly object RandomKey = new object();
         public RandomService()
         {
             Random = new Random();
         }
-
-        public int Next()
-        {
-            return Random.Next();
-        }
-
         public int Next(int maxRange)
         {
-            return Random.Next(maxRange);
+            lock (RandomKey)
+            {
+                return Random.Next(maxRange);
+            }
         }
     }
 }

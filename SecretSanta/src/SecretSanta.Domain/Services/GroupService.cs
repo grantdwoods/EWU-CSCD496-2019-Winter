@@ -44,6 +44,10 @@ namespace SecretSanta.Domain.Services
         public async Task<List<User>> GetUsers(int groupId)
         {
             Group group = await DbContext.Groups.SingleOrDefaultAsync(x => x.Id == groupId);
+            if(group == null )
+            {
+                return null;
+            }
             List<User> users = group.GroupUsers
                 .Select(x => x.User)
                 .ToList();
