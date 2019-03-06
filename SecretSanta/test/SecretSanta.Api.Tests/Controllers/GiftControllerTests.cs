@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
@@ -16,8 +18,9 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class GiftControllerTests
     {
+        
         [AssemblyInitialize]
-        public static void ConfigureAutoMapper(TestContext context)
+        public static void ConfigureAutoMapper()
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
@@ -40,7 +43,10 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftsController(testService, Mapper.Instance);
+
+            var logger = new Mock<ILogger<GiftsController>>();
+
+            var controller = new GiftsController(testService, Mapper.Instance, logger.Object);
 
             var result = (await controller.GetGiftsForUser(4)).Result as OkObjectResult;
 
@@ -57,7 +63,11 @@ namespace SecretSanta.Api.Tests.Controllers
         public async Task GetGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
-            var controller = new GiftsController(testService, Mapper.Instance);
+
+
+            var logger = new Mock<ILogger<GiftsController>>();
+
+            var controller = new GiftsController(testService, Mapper.Instance, logger.Object);
 
             var result = await controller.GetGiftsForUser(-1);
 

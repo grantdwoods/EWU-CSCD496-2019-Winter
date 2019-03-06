@@ -4,6 +4,7 @@ namespace SecretSanta.Domain.Migrations
 {
     public partial class InitialDb : Migration
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
