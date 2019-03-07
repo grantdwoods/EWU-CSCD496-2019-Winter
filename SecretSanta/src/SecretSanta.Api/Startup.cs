@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
@@ -27,8 +28,10 @@ namespace SecretSanta.Api
     public class Startup
     {
         private IConfiguration Configuration { get; }
+        
 
-        public Startup(IConfiguration configuration)
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
         }
@@ -57,12 +60,17 @@ namespace SecretSanta.Api
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
-
+            
             var dependencyContext = DependencyContext.Default;
             var assemblies = dependencyContext.RuntimeLibraries.SelectMany(lib =>
                 lib.GetDefaultAssemblyNames(dependencyContext)
                     .Where(a => a.Name.Contains("SecretSanta", StringComparison.Ordinal)).Select(Assembly.Load)).ToArray();
             services.AddAutoMapper(assemblies);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

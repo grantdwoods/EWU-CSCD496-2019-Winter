@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -16,33 +17,35 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class GroupsController : ControllerBase
     {
-        private IGroupService GroupService { get; }
-        private IMapper Mapper { get; }
+        private IGroupService _GroupService { get; }
+        private IMapper _Mapper { get; }
+        private ILogger _Logger { get; }
 
-        public GroupsController(IGroupService groupService, IMapper mapper)
+        public GroupsController(IGroupService groupService, IMapper mapper, ILogger<GroupsController> logger)
         {
-            GroupService = groupService;
-            Mapper = mapper;
+            _GroupService = groupService;
+            _Mapper = mapper;
+            _Logger = logger;
         }
 
         // GET api/group
         [HttpGet]
         public async Task<ActionResult<ICollection<GroupViewModel>>> GetGroups()
         {
-            var groups = await GroupService.FetchAll();
-            return Ok(groups.Select(x => Mapper.Map<GroupViewModel>(x)));
+            var groups = await _GroupService.FetchAll();
+            return Ok(groups.Select(x => _Mapper.Map<GroupViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GroupViewModel>> GetGroup(int id)
         {
-            var group = await GroupService.GetById(id);
+            var group = await _GroupService.GetById(id);
             if (group == null)
             {
                 return NotFound();
             }
 
-            return Ok(Mapper.Map<GroupViewModel>(group));
+            return Ok(_Mapper.Map<GroupViewModel>(group));
         }
 
         // POST api/group
@@ -53,8 +56,8 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
-            return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
+            var createdGroup = await _GroupService.AddGroup(_Mapper.Map<Group>(viewModel));
+            return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, _Mapper.Map<GroupViewModel>(createdGroup));
         }
 
         // PUT api/group/5
@@ -65,14 +68,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            var group = await GroupService.GetById(id);
+            var group = await _GroupService.GetById(id);
             if (group == null)
             {
                 return NotFound();
             }
 
-            Mapper.Map(viewModel, group);
-            await GroupService.UpdateGroup(group);
+            _Mapper.Map(viewModel, group);
+            await _GroupService.UpdateGroup(group);
 
             return NoContent();
         }
@@ -86,7 +89,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A group id must be specified");
             }
 
-            if (await GroupService.DeleteGroup(id))
+            if (await _GroupService.DeleteGroup(id))
             {
                 return Ok();
             }

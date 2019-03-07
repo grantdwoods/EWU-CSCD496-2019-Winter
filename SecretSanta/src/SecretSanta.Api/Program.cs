@@ -18,18 +18,26 @@ namespace SecretSanta.Api
 {
     public class Program
     {
+        public static readonly Dictionary<string, string> _CodeConfig =
+            new Dictionary<string, string>
+            {
+               
+            };
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", true, true)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true)
             .AddEnvironmentVariables()
+            .AddInMemoryCollection()
             .Build();
 
         public static void Main(string[] args)
         {
+
             CurrentDirectoryHelpers.SetCurrentDirectory();
 
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
@@ -62,6 +70,10 @@ namespace SecretSanta.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog();
+                .UseSerilog()
+                .ConfigureAppConfiguration((hostingContext, config)=> 
+                {
+
+                });
     }
 }

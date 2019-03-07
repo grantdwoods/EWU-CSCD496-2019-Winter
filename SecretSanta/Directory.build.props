@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\SecretSantaSolution.ruleset</CodeAnalysisRuleSet>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
 

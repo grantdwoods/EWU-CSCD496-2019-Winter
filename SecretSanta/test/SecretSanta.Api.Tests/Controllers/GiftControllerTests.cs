@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.AutoMock;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.Models;
 using SecretSanta.Api.ViewModels;
@@ -17,14 +18,22 @@ namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests
-    {
-        
+    {   
         [AssemblyInitialize]
         public static void ConfigureAutoMapper()
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
 
+        private AutoMocker _Mocker { get; set; }
+        private ILogger<GiftsController> _MockLogger;
+
+        [TestInitialize]
+        public void SetUpMock()
+        {
+            _Mocker = new AutoMocker();
+            _MockLogger = _Mocker.CreateInstance<ILogger<GiftsController>>();
+        }
         [TestMethod]
         public async Task GetGiftForUser_ReturnsUsersFromService()
         {
@@ -44,9 +53,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 }
             };
 
-            var logger = new Mock<ILogger<GiftsController>>();
-
-            var controller = new GiftsController(testService, Mapper.Instance, logger.Object);
+            var controller = new GiftsController(testService, Mapper.Instance, _MockLogger);
 
             var result = (await controller.GetGiftsForUser(4)).Result as OkObjectResult;
 
@@ -64,10 +71,7 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             var testService = new TestableGiftService();
 
-
-            var logger = new Mock<ILogger<GiftsController>>();
-
-            var controller = new GiftsController(testService, Mapper.Instance, logger.Object);
+            var controller = new GiftsController(testService, Mapper.Instance, _MockLogger);
 
             var result = await controller.GetGiftsForUser(-1);
 
