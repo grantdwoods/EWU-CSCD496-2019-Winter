@@ -17,35 +17,35 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUserService _UserService { get; }
-        private IMapper _Mapper { get; }
-        private ILogger _Logger { get; }
+        private IUserService UserService { get; }
+        private IMapper Mapper { get; }
+        private ILogger<UsersController> Logger { get; }
 
         public UsersController(IUserService userService, IMapper mapper, ILogger<UsersController> logger)
         {
-            _UserService = userService;
-            _Mapper = mapper;
-            _Logger = logger;
+            UserService = userService;
+            Mapper = mapper;
+            Logger = logger;
         }
 
         // GET api/User
         [HttpGet]
         public async Task<ActionResult<ICollection<UserViewModel>>> GetAllUsers()
         {
-            var users = await _UserService.FetchAll();
-            return Ok(users.Select(x => _Mapper.Map<UserViewModel>(x)));
+            var users = await UserService.FetchAll();
+            return Ok(users.Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserViewModel>> GetUser(int id)
         {
-            var fetchedUser = await _UserService.GetById(id);
+            var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
             }
 
-            return Ok(_Mapper.Map<UserViewModel>(fetchedUser));
+            return Ok(Mapper.Map<UserViewModel>(fetchedUser));
         }
 
         // POST api/User
@@ -57,9 +57,9 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            var createdUser = await _UserService.AddUser(_Mapper.Map<User>(viewModel));
+            var createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
 
-            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, _Mapper.Map<UserViewModel>(createdUser));
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
         // PUT api/User/5
@@ -70,14 +70,14 @@ namespace SecretSanta.Api.Controllers
             {
                 return BadRequest();
             }
-            var fetchedUser = await _UserService.GetById(id);
+            var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
             }
 
-            _Mapper.Map(viewModel, fetchedUser);
-            await _UserService.UpdateUser(fetchedUser);
+            Mapper.Map(viewModel, fetchedUser);
+            await UserService.UpdateUser(fetchedUser);
             return NoContent();
         }
 
@@ -90,7 +90,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A User id must be specified");
             }
 
-            if (await _UserService.DeleteUser(id))
+            if (await UserService.DeleteUser(id))
             {
                 return Ok();
             }

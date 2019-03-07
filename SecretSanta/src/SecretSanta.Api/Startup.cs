@@ -19,7 +19,6 @@ using Newtonsoft.Json;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using SecretSanta.Domain.Services.Interfaces;
-using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 
 [assembly: CLSCompliant(false)]
@@ -29,13 +28,10 @@ namespace SecretSanta.Api
     public class Startup
     {
         private IConfiguration Configuration { get; }
-        private Microsoft.Extensions.Logging.ILogger _Logger { get; }
 
-
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _Logger = logger;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -50,7 +46,6 @@ namespace SecretSanta.Api
             services.AddScoped<IGiftService, GiftService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
-            
 
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
@@ -62,17 +57,12 @@ namespace SecretSanta.Api
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
-            
+
             var dependencyContext = DependencyContext.Default;
             var assemblies = dependencyContext.RuntimeLibraries.SelectMany(lib =>
                 lib.GetDefaultAssemblyNames(dependencyContext)
                     .Where(a => a.Name.Contains("SecretSanta", StringComparison.Ordinal)).Select(Assembly.Load)).ToArray();
             services.AddAutoMapper(assemblies);
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console()
-                .CreateLogger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

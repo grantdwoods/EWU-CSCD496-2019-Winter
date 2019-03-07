@@ -13,13 +13,13 @@ namespace SecretSanta.Api.Controllers
     [Route("api/[controller]")]
     public class GroupUsersController : ControllerBase
     {
-        private IGroupService _GroupService { get; }
-        private ILogger _Logger { get; }
+        private IGroupService GroupService { get; }
+        private ILogger<GroupUsersController> Logger { get; }
 
         public GroupUsersController(IGroupService groupService, ILogger<GroupUsersController> logger)
         {
-            _GroupService = groupService;
-            _Logger = logger;
+            GroupService = groupService;
+            Logger = logger;
         }
 
         [HttpPut("{groupId}")]
@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (await _GroupService.AddUserToGroup(groupId, userId))
+            if (await GroupService.AddUserToGroup(groupId, userId))
             {
                 return Ok();
             }
@@ -55,7 +55,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (await _GroupService.RemoveUserFromGroup(groupId, userId))
+            if (await GroupService.RemoveUserFromGroup(groupId, userId))
             {
                 return Ok();
             }

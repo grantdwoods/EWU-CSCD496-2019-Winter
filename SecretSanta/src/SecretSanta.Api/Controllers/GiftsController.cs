@@ -1,5 +1,4 @@
 ﻿using System;
-using Serilog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,36 +17,39 @@ namespace SecretSanta.Api.Controllers
     [ApiController]
     public class GiftsController : ControllerBase
     {
-        private IGiftService _GiftService { get; }
-        private IMapper _Mapper { get; }
-        private ILogger<GiftsController> _Logger {get;}
+        private IGiftService GiftService { get; }
+        private IMapper Mapper { get; }
+        private ILogger<GiftsController> Logger {get;}
         public GiftsController(IGiftService giftService, IMapper mapper, ILogger<GiftsController> logger)
         {
-            _Logger = logger;
-            _GiftService = giftService;
-            _Mapper = mapper;
+            Logger = logger;
+            GiftService = giftService;
+            Mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<GiftViewModel>> GetGift(int id)
         {
-            var gift = await _GiftService.GetGift(id);
+            Logger.LogDebug($"Acessing GiftService.GetGift({id})");
+            var gift = await GiftService.GetGift(id);
 
             if (gift == null)
             {
-                _Logger.LogInformation($" Get gift 404 No data for {id}.");
+                Logger.LogInformation($"Get gift 404 No data for {id}.");
                 return NotFound();
             }
-
-            return Ok(_Mapper.Map<GiftViewModel>(gift));
+            Logger.LogInformation($"Found Gift {id}.");
+            return Ok(Mapper.Map<GiftViewModel>(gift));
         }
 
         [HttpPost]
         public async Task<ActionResult<GiftViewModel>> CreateGift(GiftInputViewModel viewModel)
         {
-            var createdGift = await _GiftService.AddGift(_Mapper.Map<Gift>(viewModel));
+            Logger.LogDebug($"Acessing Gift Service, Add Gift {viewModel.Title} to User {viewModel.UserId}");
+            var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel));
 
-            return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, _Mapper.Map<GiftViewModel>(createdGift));
+            Logger.LogInformation($"Returning new Gift Id:{createdGift.Id} location.");
+            return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, Mapper.Map<GiftViewModel>(createdGift));
         }
 
         // GET api/Gift/5
@@ -58,9 +60,9 @@ namespace SecretSanta.Api.Controllers
             {
                 return NotFound();
             }
-            List<Gift> databaseUsers = await _GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);
 
-            return Ok(databaseUsers.Select(x => _Mapper.Map<GiftViewModel>(x)).ToList());
+            return Ok(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
 }
