@@ -12,12 +12,13 @@ namespace SecretSanta.Api.Models
         {
             [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
             internal static extern IntPtr GetModuleHandle(string lpModuleName);
-
-            [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]
-            static extern int http_get_application_properties(ref IISConfigurationData iiConfigData);
         }
 
         internal const string AspNetCoreModuleDll = "aspnetcorev2_inprocess.dll";
+
+
+        [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]
+        private static extern int http_get_application_properties(ref IISConfigurationData iiConfigData);
 
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         private struct IISConfigurationData
@@ -47,7 +48,7 @@ namespace SecretSanta.Api.Models
                     }
 
                     IISConfigurationData configurationData = default(IISConfigurationData);
-                    if (NativeMethods.http_get_application_properties(ref configurationData) != 0)
+                    if (http_get_application_properties(ref configurationData) != 0)
                     {
                         return;
                     }

@@ -22,6 +22,7 @@ using SecretSanta.Domain.Services.Interfaces;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 
+[assembly: CLSCompliant(false)]
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace SecretSanta.Api
 {

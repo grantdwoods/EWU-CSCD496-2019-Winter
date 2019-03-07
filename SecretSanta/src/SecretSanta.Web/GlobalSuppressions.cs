@@ -6,3 +6,6 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Do not directly await a Task", 
     Justification = "No SynchronizationContext in .net core")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", 
+    Justification = "Class Program contains Main method.", Scope = "type", Target = "~T:SecretSanta.Web.Program")]
