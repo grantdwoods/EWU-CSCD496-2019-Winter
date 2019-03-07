@@ -18,11 +18,7 @@ namespace SecretSanta.Api
 {
     public class Program
     {
-        public static readonly Dictionary<string, string> _CodeConfig =
-            new Dictionary<string, string>
-            {
-               
-            };
+
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", true, true)
@@ -70,10 +66,6 @@ namespace SecretSanta.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog()
-                .ConfigureAppConfiguration((hostingContext, config)=> 
-                {
-
-                });
+                .UseSerilog();
     }
 }

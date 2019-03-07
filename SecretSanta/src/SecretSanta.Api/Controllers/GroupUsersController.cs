@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SecretSanta.Domain.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,11 +13,13 @@ namespace SecretSanta.Api.Controllers
     [Route("api/[controller]")]
     public class GroupUsersController : ControllerBase
     {
-        private IGroupService GroupService { get; }
+        private IGroupService _GroupService { get; }
+        private ILogger _Logger { get; }
 
-        public GroupUsersController(IGroupService groupService)
+        public GroupUsersController(IGroupService groupService, ILogger<GroupUsersController> logger)
         {
-            GroupService = groupService;
+            _GroupService = groupService;
+            _Logger = logger;
         }
 
         [HttpPut("{groupId}")]
@@ -32,7 +35,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (await GroupService.AddUserToGroup(groupId, userId))
+            if (await _GroupService.AddUserToGroup(groupId, userId))
             {
                 return Ok();
             }
@@ -52,7 +55,7 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest();
             }
 
-            if (await GroupService.RemoveUserFromGroup(groupId, userId))
+            if (await _GroupService.RemoveUserFromGroup(groupId, userId))
             {
                 return Ok();
             }
