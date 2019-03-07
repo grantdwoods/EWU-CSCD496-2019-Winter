@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+[assembly: CLSCompliant(false)]
 namespace SecretSanta.Web
 {
     public class Startup

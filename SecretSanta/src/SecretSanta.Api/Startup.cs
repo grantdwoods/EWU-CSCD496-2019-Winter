@@ -28,12 +28,13 @@ namespace SecretSanta.Api
     public class Startup
     {
         private IConfiguration Configuration { get; }
-        
+        private Microsoft.Extensions.Logging.ILogger _Logger { get; }
 
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _Logger = logger;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

@@ -19,3 +19,9 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1506:Avoid excessive class coupling", 
     Justification = "DI Container is bound to have a multitude of dependancies.", Scope = "member", Target = "~M:SecretSanta.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1060:Move pinvokes to native methods class", 
+    Justification = "It seems fixes for this warning cause errors that prevent the class from functioning.", Scope = "type", Target = "~T:SecretSanta.Api.Models.CurrentDirectoryHelpers")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", 
+    Justification = "Class Program contains Main method.", Scope = "type", Target = "~T:SecretSanta.Api.Program")]

@@ -5,15 +5,19 @@ using System.Threading.Tasks;
 
 namespace SecretSanta.Api.Models
 {
+
     internal class CurrentDirectoryHelpers
     {
+        internal static class NativeMethods
+        {
+            [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+            internal static extern IntPtr GetModuleHandle(string lpModuleName);
+
+            [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]
+            static extern int http_get_application_properties(ref IISConfigurationData iiConfigData);
+        }
+
         internal const string AspNetCoreModuleDll = "aspnetcorev2_inprocess.dll";
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
-
-        [System.Runtime.InteropServices.DllImport(AspNetCoreModuleDll)]
-        private static extern int http_get_application_properties(ref IISConfigurationData iiConfigData);
 
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         private struct IISConfigurationData
@@ -37,13 +41,13 @@ namespace SecretSanta.Api.Models
                 if (string.IsNullOrEmpty(sitePhysicalPath))
                 {
                     // Skip if not running ANCM InProcess
-                    if (GetModuleHandle(AspNetCoreModuleDll) == IntPtr.Zero)
+                    if (NativeMethods.GetModuleHandle(AspNetCoreModuleDll) == IntPtr.Zero)
                     {
                         return;
                     }
 
                     IISConfigurationData configurationData = default(IISConfigurationData);
-                    if (http_get_application_properties(ref configurationData) != 0)
+                    if (NativeMethods.http_get_application_properties(ref configurationData) != 0)
                     {
                         return;
                     }
