@@ -13,3 +13,6 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", 
     Justification = "EF will not map URI to string")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", 
+    Justification = "Class is meant to be mutable (mostly because of automapper)", Scope = "member", Target = "~P:SecretSanta.Api.ViewModels.GroupViewModel.GroupUsers")]
