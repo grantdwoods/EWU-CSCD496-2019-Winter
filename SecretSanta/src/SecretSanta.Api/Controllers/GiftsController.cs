@@ -30,25 +30,20 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<GiftViewModel>> GetGift(int id)
         {
-            Logger.LogDebug($"Acessing GiftService.GetGift({id})");
             var gift = await GiftService.GetGift(id);
 
             if (gift == null)
             {
-                Logger.LogInformation($"Get gift 404 No data for {id}.");
                 return NotFound();
             }
-            Logger.LogInformation($"Found Gift {id}.");
             return Ok(Mapper.Map<GiftViewModel>(gift));
         }
 
         [HttpPost]
         public async Task<ActionResult<GiftViewModel>> CreateGift(GiftInputViewModel viewModel)
         {
-            Logger.LogDebug($"Acessing Gift Service, Add Gift {viewModel.Title} to User {viewModel.UserId}");
             var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel));
 
-            Logger.LogInformation($"Returning new Gift Id:{createdGift.Id} location.");
             return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, Mapper.Map<GiftViewModel>(createdGift));
         }
 
