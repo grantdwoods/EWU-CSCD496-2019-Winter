@@ -12,3 +12,5 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", 
     Justification = "Class is just used as a Mock", Scope = "member", Target = "~P:SecretSanta.Api.Tests.TestableGiftService.ToReturn")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1016:Mark assemblies with assembly version", Justification = "<Pending>")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "<Pending>", Scope = "member", Target = "~M:SecretSanta.Api.Tests.Controllers.GiftControllerTests.ConfigureAutoMapper(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)")]

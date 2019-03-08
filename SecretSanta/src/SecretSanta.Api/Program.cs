@@ -9,6 +9,7 @@ using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using Serilog;
 
+
 namespace SecretSanta.Api
 {
     public class Program
@@ -48,9 +49,7 @@ namespace SecretSanta.Api
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    var env = hostingContext.HostingEnvironment;
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true, true);
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
                     config.AddEnvironmentVariables();
 
@@ -59,11 +58,11 @@ namespace SecretSanta.Api
                         config.AddCommandLine(args);
                     }
                 })
-                .ConfigureLogging((hostingConext, logging) => 
+                .ConfigureLogging((hostingContext, logging) => 
                 {
                     Log.Logger = new LoggerConfiguration()
                         .MinimumLevel.Debug()
-                        .ReadFrom.Configuration(hostingConext.Configuration)
+                        .ReadFrom.Configuration(hostingContext.Configuration)
                         .CreateLogger();
                 })
                 .UseSerilog();

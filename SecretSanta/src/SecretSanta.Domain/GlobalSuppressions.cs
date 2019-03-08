@@ -12,3 +12,4 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", 
     Justification = "My understanding is that there is no direct way to map System.Uri to a string with EF")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1016:Mark assemblies with assembly version", Justification = "<Pending>")]

@@ -5,10 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SecretSanta.Domain.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-[assembly: CLSCompliant(false)]
 namespace SecretSanta.Api.Tests
 {
     public class CustomWebApplicationFactory<TStartup>

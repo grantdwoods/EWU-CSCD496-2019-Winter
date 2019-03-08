@@ -18,22 +18,15 @@ namespace SecretSanta.Api.Tests.Controllers
 {
     [TestClass]
     public class GiftControllerTests
-    {   
+    {
         [AssemblyInitialize]
-        public static void ConfigureAutoMapper()
+        public static void ConfigureAutoMapper(TestContext context)
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()));
         }
 
-        private AutoMocker Mocker { get; set; }
-        private ILogger<GiftsController> _mockLogger;
-
         [TestInitialize]
-        public void SetUpMock()
-        {
-            Mocker = new AutoMocker();
-            _mockLogger = Mocker.CreateInstance<ILogger<GiftsController>>();
-        }
+
         [TestMethod]
         public async Task GetGiftForUser_ReturnsUsersFromService()
         {
@@ -53,7 +46,8 @@ namespace SecretSanta.Api.Tests.Controllers
                 }
             };
 
-            var controller = new GiftsController(testService, Mapper.Instance, _mockLogger);
+            var mock = new Mock<ILogger<GiftsController>>();
+            var controller = new GiftsController(testService, Mapper.Instance, mock.Object);
 
             var result = (await controller.GetGiftsForUser(4)).Result as OkObjectResult;
 
@@ -71,7 +65,8 @@ namespace SecretSanta.Api.Tests.Controllers
         {
             var testService = new TestableGiftService();
 
-            var controller = new GiftsController(testService, Mapper.Instance, _mockLogger);
+            var mock = new Mock<ILogger<GiftsController>>();
+            var controller = new GiftsController(testService, Mapper.Instance, mock.Object);
 
             var result = await controller.GetGiftsForUser(-1);
 

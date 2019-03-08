@@ -9,3 +9,5 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", 
     Justification = "Class Program contains Main method.", Scope = "type", Target = "~T:SecretSanta.Web.Program")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1016:Mark assemblies with assembly version", Justification = "<Pending>")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1014:Mark assemblies with CLSCompliant", Justification = "<Pending>")]
