@@ -25,4 +25,3 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", 
     Justification = "Class Program contains Main method.", Scope = "type", Target = "~T:SecretSanta.Api.Program")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1016:Mark assemblies with assembly version", Justification = "<Pending>")]
