@@ -10,6 +10,7 @@ namespace SecretSanta.Web.UITests
     public class GroupsPage
     {
         public const string Slug = "Groups";
+        public const string GroupLinksText = " Edit Delete";
 
         public IWebDriver Driver { get; }
 
@@ -27,9 +28,9 @@ namespace SecretSanta.Web.UITests
                     .Select(x =>
                     {
                         var text = x.Text;
-                        if (text.EndsWith(" Edit Delete"))
+                        if (text.EndsWith(GroupLinksText))
                         {
-                            text = text.Substring(0, text.Length - " Edit Delete".Length);
+                            text = text.Substring(0, text.Length - GroupLinksText.Length);
                         }
                         return text;
                     })
@@ -43,7 +44,7 @@ namespace SecretSanta.Web.UITests
                 Driver.FindElements(By.CssSelector("a.is-danger"));
 
             return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}?')"));
-        }
+        } 
 
         public GroupsPage(IWebDriver driver)
         {

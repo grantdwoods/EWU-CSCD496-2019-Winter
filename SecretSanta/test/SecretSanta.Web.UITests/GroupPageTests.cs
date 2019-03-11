@@ -30,42 +30,32 @@ namespace SecretSanta.Web.UITests
         }
 
         [TestMethod]
-        public void CanGetToGroupsPage()
+        public void CanNavigateToGroupsPage()
         {
-            //Arrange
             Driver.Navigate().GoToUrl(RootUrl);
 
-            //Act
             var homePage = new HomePage(Driver);
             homePage.GroupsLink.Click();
 
-            //Assert
             Assert.IsTrue(Driver.Url.EndsWith(GroupsPage.Slug));
         }
 
         [TestMethod]
         public void CanNavigateToAddGroupsPage()
         {
-            //Arrange
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
-            var page = new GroupsPage(Driver);
+            var page = CreatePage();
 
-            //Act
             page.AddGroup.Click();
 
-            //Assert
             Assert.IsTrue(Driver.Url.EndsWith(AddGroupsPage.Slug));
         }
 
         [TestMethod]
         public void CanAddGroups()
         {
-            //Arrange /Act
             string groupName = "Group Name" + Guid.NewGuid().ToString("N");
             GroupsPage page = CreateGroup(groupName);
-            
-            //Assert
+
             Assert.IsTrue(Driver.Url.EndsWith(GroupsPage.Slug));
             List<string> groupNames = page.GroupNames;
             Assert.IsTrue(groupNames.Contains(groupName));
@@ -74,25 +64,20 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanDeleteGroup()
         {
-            //Arrange
             string groupName = "Group Name" + Guid.NewGuid().ToString("N");
             GroupsPage page = CreateGroup(groupName);
 
-            //Act
             IWebElement deleteLink = page.GetDeleteLink(groupName);
             deleteLink.Click();
             Driver.SwitchTo().Alert().Accept();
 
-            //Assert
             List<string> groupNames = page.GroupNames;
             Assert.IsFalse(groupNames.Contains(groupName));
         }
 
         private GroupsPage CreateGroup(string groupName)
         {
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
-            var page = new GroupsPage(Driver);
+            var page = CreatePage();
             page.AddGroup.Click();
 
             var addGroupPage = new AddGroupsPage(Driver);
@@ -100,6 +85,13 @@ namespace SecretSanta.Web.UITests
             addGroupPage.GroupNameTextBox.SendKeys(groupName);
             addGroupPage.SubmitButton.Click();
             return page;
+        }
+
+        private GroupsPage CreatePage()
+        {
+            var rootUri = new Uri(RootUrl);
+            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
+            return new GroupsPage(Driver);
         }
     }
 }
