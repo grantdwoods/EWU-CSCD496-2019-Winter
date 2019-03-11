@@ -44,23 +44,23 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanNavigateToAddUserPage()
         {
-            var page = CreatePage();
+            var usersPage = CreateUsersPage();
 
-            page.AddUser.Click();
+            usersPage.AddUser.Click();
 
             Assert.IsTrue(Driver.Url.EndsWith(AddUserPage.Slug));
         }
         [TestMethod]
         public void CanAddUser()
         {
-            var page = CreatePage();
-            page.AddUser.Click();
+            var usersPage = CreateUsersPage();
+            usersPage.AddUser.Click();
 
             GuidUserInfo(out string userFirst, out string userLast);
 
             CreateUser(userFirst, userLast);
 
-            List<string> users = page.UserNames as List<string>;
+            List<string> users = usersPage.UserNames as List<string>;
 
             Assert.IsTrue(users.Contains($"{userFirst} {userLast}"));
         }
@@ -68,13 +68,44 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanNavigateToEditUserPage()
         {
-            var page = CreatePage();
-
+            var usersPage = CreateUsersPage();
+            usersPage.AddUser.Click();
             GuidUserInfo(out string first, out string last);
             CreateUser(first, last);
 
-            page.GetEditLink($"{first} {last}").Click();
-            Assert.IsTrue(Driver.Url.EndsWith(EditUserPage.Slug));
+            IWebElement editLink = usersPage.GetEditLink($"{first} {last}");
+            string linkText = editLink.GetAttribute("href");
+            string userID = (linkText.Substring(linkText.LastIndexOf("/") + 1));
+            var editPage = new EditUserPage(Driver);
+
+            editLink.Click();
+
+            Assert.AreEqual<string>(userID, editPage.CurrentUserID);
+            Assert.AreEqual<string>(first, editPage.FirstNameTextBox.GetAttribute("value"));
+            Assert.AreEqual<string>(last, editPage.LastNameTextBox.GetAttribute("value"));
+        }
+
+        [TestMethod]
+        public void CanEditUser()
+        {
+            var usersPage = CreateUsersPage();
+            usersPage.AddUser.Click();
+            GuidUserInfo(out string first, out string last);
+            CreateUser(first, last);
+            usersPage.GetEditLink($"{first} {last}").Click();
+            EditUserPage editPage = new EditUserPage(Driver);
+            editPage.FirstNameTextBox.Clear();
+            editPage.LastNameTextBox.Clear();
+
+            GuidUserInfo(out string newFirst, out string newLast);
+            editPage.FirstNameTextBox.SendKeys(newFirst);
+            editPage.LastNameTextBox.SendKeys(newLast);
+            editPage.SubmitButton.Click();
+
+            List<string> users = usersPage.UserNames as List<string>;
+
+            Assert.IsTrue(users.Contains($"{newFirst} {newLast}"));
+            Assert.IsFalse(users.Contains($"{first} {last}"));
         }
 
         private void GuidUserInfo(out string userFirst, out string userLast)
@@ -92,7 +123,7 @@ namespace SecretSanta.Web.UITests
             return addpage;
         }
 
-        private UsersPage CreatePage()
+        private UsersPage CreateUsersPage()
         {
             var rootUri = new Uri(RootUrl);
             Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
