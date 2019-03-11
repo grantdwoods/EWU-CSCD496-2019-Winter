@@ -12,7 +12,7 @@ namespace SecretSanta.Web.UITests
     [TestClass]
     public class GroupPageTests
     {
-        private const string RootUrl = "https://localhost:44331/";
+        private const string RootUrl = "https://localhost:44314/";
 
         private IWebDriver Driver { get; set; }
 
@@ -25,8 +25,8 @@ namespace SecretSanta.Web.UITests
         [TestCleanup]
         public void Cleanup()
         {
-            //Driver.Quit();
-            //Driver.Dispose();
+            Driver.Quit();
+            Driver.Dispose();
         }
 
         [TestMethod]
@@ -81,6 +81,7 @@ namespace SecretSanta.Web.UITests
             //Act
             IWebElement deleteLink = page.GetDeleteLink(groupName);
             deleteLink.Click();
+            Driver.SwitchTo().Alert().Accept();
 
             //Assert
             List<string> groupNames = page.GroupNames;
@@ -99,86 +100,6 @@ namespace SecretSanta.Web.UITests
             addGroupPage.GroupNameTextBox.SendKeys(groupName);
             addGroupPage.SubmitButton.Click();
             return page;
-        }
-    }
-
-    public class HomePage
-    {
-        public IWebDriver Driver { get; }
-
-        public GroupsPage GroupPage => new GroupsPage(Driver);
-
-        //Id, LinkText, CssSelector/XPath
-        //public IWebElement GroupsLink => Driver.FindElement(By.CssSelector("a[href=\"/Groups\"]"));
-        public IWebElement GroupsLink => Driver.FindElement(By.LinkText("Groups"));
-
-        public HomePage(IWebDriver driver)
-        {
-            Driver = driver ?? throw new ArgumentNullException(nameof(driver));
-        }
-    }
-
-    public class GroupsPage
-    {
-        public const string Slug = "Groups";
-
-        public IWebDriver Driver { get; }
-
-        public IWebElement AddGroup => Driver.FindElement(By.LinkText("Add Group"));
-        
-        public AddGroupsPage AddGroupsPage => new AddGroupsPage(Driver);
-
-        public List<string> GroupNames
-        {
-            get
-            {
-                var elements = Driver.FindElements(By.CssSelector("h1+ul>li"));
-
-                return elements
-                    .Select(x =>
-                    {
-                        var text= x.Text;
-                        if (text.EndsWith(" Edit Delete"))
-                        {
-                            text = text.Substring(0, text.Length - " Edit Delete".Length);
-                        }
-                        return text;
-                    })
-                    .ToList();
-            }
-        }
-
-        public IWebElement GetDeleteLink(string groupName)
-        {
-            ReadOnlyCollection<IWebElement> deleteLinks = 
-                Driver.FindElements(By.CssSelector("a.is-danger"));
-
-            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{groupName}')"));
-        }
-
-        public GroupsPage(IWebDriver driver)
-        {
-            Driver = driver ?? throw new ArgumentNullException(nameof(driver));
-        }
-    }
-
-    public class AddGroupsPage
-    {
-
-        public const string Slug = GroupsPage.Slug + "/Add";
-
-        public IWebDriver Driver { get; }
-
-        public IWebElement GroupNameTextBox => Driver.FindElement(By.Id("Name"));
-
-        public IWebElement SubmitButton => 
-            Driver
-                .FindElements(By.CssSelector("button.is-primary"))
-                .Single(x => x.Text == "Submit");
-
-        public AddGroupsPage(IWebDriver driver)
-        {
-            Driver = driver ?? throw new ArgumentNullException(nameof(driver));
         }
     }
 }
