@@ -17,6 +17,8 @@ namespace SecretSanta.Web.UITests.Pages
             Driver
                 .FindElements(By.CssSelector("button.is-primary"))
                 .Single(x => x.Text == "Submit");
+        public IWebElement ErrorElement =>
+            Driver.FindElement(By.CssSelector("div.container>div>ul>li"));
 
         public EditUserPage(IWebDriver driver)
         {

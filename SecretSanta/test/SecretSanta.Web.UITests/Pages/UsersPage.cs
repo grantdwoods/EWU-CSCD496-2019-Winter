@@ -29,7 +29,7 @@ namespace SecretSanta.Web.UITests.Pages
         public IWebElement GetEditLink(string userName)
         {
             ReadOnlyCollection<IWebElement> userElements = 
-                Driver.FindElements(By.CssSelector("h1+ul>li"));
+                Driver.FindElements(By.CssSelector("h1.title+ul>li"));
 
             var userElement = userElements.Single(x => x.Text.StartsWith(userName));
 
@@ -38,7 +38,7 @@ namespace SecretSanta.Web.UITests.Pages
         public IWebElement GetDeleteLink(string userName)
         {
             ReadOnlyCollection<IWebElement> deleteLinks =
-                Driver.FindElements(By.CssSelector("a.is-danger"));
+                Driver.FindElements(By.CssSelector("h1.title+ul>li>a.is-danger"));
 
             return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{userName}?')"));
         }

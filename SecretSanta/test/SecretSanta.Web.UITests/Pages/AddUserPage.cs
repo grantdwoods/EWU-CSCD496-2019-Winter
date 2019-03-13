@@ -12,6 +12,8 @@ namespace SecretSanta.Web.UITests.Pages
         public const string Slug = UsersPage.Slug + "/Add";
         public IWebElement FirstNameTextBox => Driver.FindElement(By.Id("FirstName"));
         public IWebElement LastNameTextBox => Driver.FindElement(By.Id("LastName"));
+        public IWebElement ErrorElement => 
+            Driver.FindElement(By.CssSelector("div.container>div>ul>li"));
 
         public IWebElement SubmitButton =>
             Driver
