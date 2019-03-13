@@ -30,47 +30,6 @@ namespace SecretSanta.Web.UITests
             Driver.Dispose();
         }
 
-        [TestMethod]
-        public void CanNavigateToUsersPage()
-        {
-            Driver.Navigate().GoToUrl(RootUrl);
-
-            var homePage = new HomePage(Driver);
-            homePage.UsersLink.Click();
-
-            Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
-        }
-        [TestMethod]
-        public void CanNavigateBackHomeFromUsersPage()
-        {
-            Driver.Navigate().GoToUrl($"{RootUrl}{UsersPage.Slug}");
-            UsersPage usersPage = new UsersPage(Driver);
-
-            usersPage.HomePageLink.Click();
-
-            Assert.AreEqual<string>(RootUrl, Driver.Url);
-        }
-
-        [TestMethod]
-        public void CanNavigateToAddUserPage()
-        {
-            var usersPage = CreateUsersPage();
-
-            usersPage.AddUser.Click();
-
-            Assert.IsTrue(Driver.Url.EndsWith(AddUserPage.Slug));
-        }
-
-        [TestMethod]
-        public void CanNavigateBackHomeFromAddUserPage()
-        {
-            Driver.Navigate().GoToUrl($"{RootUrl}{AddUserPage.Slug}");
-            AddUserPage addUserPage = new AddUserPage(Driver);
-
-            addUserPage.HomePageLink.Click();
-
-            Assert.AreEqual<string>(RootUrl, Driver.Url);
-        }
 
         [TestMethod]
         public void CanAddUser()

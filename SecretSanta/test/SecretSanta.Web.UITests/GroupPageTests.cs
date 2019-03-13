@@ -30,27 +30,6 @@ namespace SecretSanta.Web.UITests
         }
 
         [TestMethod]
-        public void CanNavigateToGroupsPage()
-        {
-            Driver.Navigate().GoToUrl(RootUrl);
-
-            var homePage = new HomePage(Driver);
-            homePage.GroupsLink.Click();
-
-            Assert.IsTrue(Driver.Url.EndsWith(GroupsPage.Slug));
-        }
-
-        [TestMethod]
-        public void CanNavigateToAddGroupsPage()
-        {
-            var page = CreatePage();
-
-            page.AddGroup.Click();
-
-            Assert.IsTrue(Driver.Url.EndsWith(AddGroupsPage.Slug));
-        }
-
-        [TestMethod]
         public void CanAddGroups()
         {
             string groupName = "Group Name" + Guid.NewGuid().ToString("N");

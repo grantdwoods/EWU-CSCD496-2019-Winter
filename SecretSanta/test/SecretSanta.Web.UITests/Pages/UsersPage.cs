@@ -14,6 +14,8 @@ namespace SecretSanta.Web.UITests.Pages
         IWebDriver Driver { get; }
         public IWebElement AddUser => Driver.FindElement(By.LinkText("Add User"));
         public IWebElement HomePageLink => Driver.FindElement(By.LinkText("Secret Santa"));
+        public IWebElement GroupsPageLink => Driver.FindElement(By.LinkText("Groups"));
+        public IWebElement GiftsPageLink => Driver.FindElement(By.LinkText("Gifts"));
         public UsersPage(IWebDriver driver)
         {
             Driver = driver ?? throw new ArgumentNullException(nameof(driver));
