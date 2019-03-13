@@ -54,56 +54,52 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanAddUser()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
-            GuidUserInfo(out string userFirst, out string userLast);
+            GuidUserInfo(out string first, out string last);
 
-            CreateUser(userFirst, userLast);
+            UsersPage usersPage = CreateUser(first, last);
 
             List<string> users = usersPage.UserNames.ToList();
 
-            Assert.IsTrue(users.Contains($"{userFirst} {userLast}"));
+            Assert.IsTrue(users.Contains($"{first} {last}"));
         }
 
         [TestMethod]
         public void CanAddUserOptionalLastName()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
-            GuidUserInfo(out string userFirst, out string userLast);
+            GuidUserInfo(out string first, out string last);
+            UsersPage usersPage = CreateUser(first, last);
 
-            CreateUser(userFirst, "");
+            CreateUser(first, "");
 
             List<string> users = usersPage.UserNames.ToList();
 
-            Assert.IsTrue(users.Contains(userFirst));
+            Assert.IsTrue(users.Contains(first));
         }
 
         [TestMethod]
         public void CanNotAddEmptyFirstNameErrorAppears()
         {
-            var usersPage = CreateUsersPage();
+            GuidUserInfo(out string first, out string last);
+            UsersPage usersPage = CreateUsersPage();
             usersPage.AddUser.Click();
-            GuidUserInfo(out string userFirst, out string userLast);
             var addPage = new AddUserPage(Driver);
 
             Assert.IsFalse(addPage.ErrorElement.Displayed);
-            addPage.LastNameTextBox.SendKeys(userLast);
+            addPage.LastNameTextBox.SendKeys(first);
             addPage.SubmitButton.Click();
 
+            
             List<string> users = usersPage.UserNames.ToList();
             
-            Assert.IsFalse(users.Contains(userLast));
+            Assert.IsFalse(users.Contains(last));
             Assert.IsTrue(addPage.ErrorElement.Displayed);
         }
 
         [TestMethod]
         public void CanNavigateToEditUserPage()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
             GuidUserInfo(out string first, out string last);
-            CreateUser(first, last);
+            UsersPage usersPage = CreateUser(first, last);
 
             IWebElement editLink = usersPage.GetEditLink($"{first} {last}");
             string linkText = editLink.GetAttribute("href");
@@ -120,10 +116,9 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanEditUser()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
             GuidUserInfo(out string first, out string last);
-            CreateUser(first, last);
+            UsersPage usersPage = CreateUser(first, last);
+
             usersPage.GetEditLink($"{first} {last}").Click();
             EditUserPage editPage = new EditUserPage(Driver);
             editPage.FirstNameTextBox.Clear();
@@ -143,10 +138,8 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanNotCangeToEmptyFirstNameErrorAppears()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
             GuidUserInfo(out string first, out string last);
-            CreateUser(first, last);
+            UsersPage usersPage = CreateUser(first, last);
             usersPage.GetEditLink($"{first} {last}").Click();
             EditUserPage editPage = new EditUserPage(Driver);
             editPage.FirstNameTextBox.Clear();
@@ -163,10 +156,8 @@ namespace SecretSanta.Web.UITests
         [TestMethod]
         public void CanDeleteUser()
         {
-            var usersPage = CreateUsersPage();
-            usersPage.AddUser.Click();
             GuidUserInfo(out string first, out string last);
-            CreateUser(first, last);
+            UsersPage usersPage = CreateUser(first, last);
 
             string userFull = $"{first} {last}";
             usersPage.GetDeleteLink(userFull).Click();
@@ -183,8 +174,10 @@ namespace SecretSanta.Web.UITests
             userFirst = "UserFirst" + guid;
             userLast = "UserLast" + guid;
         }
-        private AddUserPage CreateUser(string userFirst, string userLast)
+        private UsersPage CreateUser(string userFirst, string userLast)
         {
+            var usersPage = CreateUsersPage();
+            usersPage.AddUser.Click();
             var addpage = new AddUserPage(Driver);
             addpage.FirstNameTextBox.SendKeys(userFirst);
 
@@ -193,7 +186,7 @@ namespace SecretSanta.Web.UITests
                 addpage.LastNameTextBox.SendKeys(userLast);
             }
             addpage.SubmitButton.Click();
-            return addpage;
+            return usersPage;
         }
 
         private UsersPage CreateUsersPage()
