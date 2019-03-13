@@ -40,6 +40,16 @@ namespace SecretSanta.Web.UITests
 
             Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
         }
+        [TestMethod]
+        public void CanNavigateBackHomeFromUsersPage()
+        {
+            Driver.Navigate().GoToUrl($"{RootUrl}{UsersPage.Slug}");
+            UsersPage usersPage = new UsersPage(Driver);
+
+            usersPage.HomePageLink.Click();
+
+            Assert.AreEqual<string>(RootUrl, Driver.Url);
+        }
 
         [TestMethod]
         public void CanNavigateToAddUserPage()
@@ -49,6 +59,17 @@ namespace SecretSanta.Web.UITests
             usersPage.AddUser.Click();
 
             Assert.IsTrue(Driver.Url.EndsWith(AddUserPage.Slug));
+        }
+
+        [TestMethod]
+        public void CanNavigateBackHomeFromAddUserPage()
+        {
+            Driver.Navigate().GoToUrl($"{RootUrl}{AddUserPage.Slug}");
+            AddUserPage addUserPage = new AddUserPage(Driver);
+
+            addUserPage.HomePageLink.Click();
+
+            Assert.AreEqual<string>(RootUrl, Driver.Url);
         }
 
         [TestMethod]
@@ -67,9 +88,8 @@ namespace SecretSanta.Web.UITests
         public void CanAddUserOptionalLastName()
         {
             GuidUserInfo(out string first, out string last);
-            UsersPage usersPage = CreateUser(first, last);
 
-            CreateUser(first, "");
+            UsersPage usersPage = CreateUser(first, "");
 
             List<string> users = usersPage.UserNames.ToList();
 

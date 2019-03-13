@@ -13,6 +13,7 @@ namespace SecretSanta.Web.UITests.Pages
         public const string UserLinksText = " Edit Delete";
         IWebDriver Driver { get; }
         public IWebElement AddUser => Driver.FindElement(By.LinkText("Add User"));
+        public IWebElement HomePageLink => Driver.FindElement(By.LinkText("Secret Santa"));
         public UsersPage(IWebDriver driver)
         {
             Driver = driver ?? throw new ArgumentNullException(nameof(driver));
