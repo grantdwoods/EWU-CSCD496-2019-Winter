@@ -11,12 +11,8 @@ using System.Text;
 namespace SecretSanta.Web.UITests
 {
     [TestClass]
-    public class UsersPageTests
+    public class UsersPageTests : BasePageTest
     {
-        private const string RootUrl = "https://localhost:44314/";
-
-        private IWebDriver Driver { get; set; }
-
         [TestInitialize]
         public void Init()
         {
@@ -166,13 +162,6 @@ namespace SecretSanta.Web.UITests
             }
             addpage.SubmitButton.Click();
             return usersPage;
-        }
-
-        private UsersPage CreateUsersPage()
-        {
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
-            return new UsersPage(Driver);
         }
     }
 }

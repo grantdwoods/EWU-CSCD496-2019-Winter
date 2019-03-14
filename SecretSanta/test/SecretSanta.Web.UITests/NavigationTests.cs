@@ -10,12 +10,8 @@ using System.Text;
 namespace SecretSanta.Web.UITests
 {
     [TestClass]
-    public class NavigationTests
+    public class NavigationTests : BasePageTest
     {
-        private const string RootUrl = "https://localhost:44314/";
-
-        private IWebDriver Driver { get; set; }
-
         [TestInitialize]
         public void Init()
         {
@@ -123,20 +119,6 @@ namespace SecretSanta.Web.UITests
             page.AddGroup.Click();
 
             Assert.IsTrue(Driver.Url.EndsWith(AddGroupsPage.Slug));
-        }
-
-        private UsersPage CreateUsersPage()
-        {
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
-            return new UsersPage(Driver);
-        }
-
-        private GroupsPage CreateGroupsPage()
-        {
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
-            return new GroupsPage(Driver);
         }
     }
 }

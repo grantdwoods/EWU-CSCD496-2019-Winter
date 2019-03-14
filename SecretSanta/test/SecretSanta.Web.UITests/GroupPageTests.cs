@@ -10,12 +10,8 @@ using OpenQA.Selenium.Chrome;
 namespace SecretSanta.Web.UITests
 {
     [TestClass]
-    public class GroupPageTests
-    {
-        private const string RootUrl = "https://localhost:44314/";
-
-        private IWebDriver Driver { get; set; }
-
+    public class GroupPageTests : BasePageTest
+    { 
         [TestInitialize]
         public void Init()
         {
@@ -52,25 +48,6 @@ namespace SecretSanta.Web.UITests
 
             List<string> groupNames = page.GroupNames;
             Assert.IsFalse(groupNames.Contains(groupName));
-        }
-
-        private GroupsPage CreateGroup(string groupName)
-        {
-            var page = CreatePage();
-            page.AddGroup.Click();
-
-            var addGroupPage = new AddGroupsPage(Driver);
-            
-            addGroupPage.GroupNameTextBox.SendKeys(groupName);
-            addGroupPage.SubmitButton.Click();
-            return page;
-        }
-
-        private GroupsPage CreatePage()
-        {
-            var rootUri = new Uri(RootUrl);
-            Driver.Navigate().GoToUrl(new Uri(rootUri, GroupsPage.Slug));
-            return new GroupsPage(Driver);
         }
     }
 }
